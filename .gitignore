@@ -1,0 +1,78 @@
+# Prerequisites
+*.d
+.env
+.key_file.txt
+.authority_pk.txt
+.authority_pvk.txt
+key_file.h
+authority_pvk.h
+authority_pk.h
+*.png.sign
+
+# Compiled Object files
+*.slo
+*.lo
+*.o
+*.obj
+
+# Precompiled Headers
+*.gch
+*.pch
+
+# Compiled Dynamic libraries
+*.so
+*.dylib
+*.dll
+
+# Fortran module files
+*.mod
+*.smod
+
+# Compiled Static libraries
+*.lai
+*.la
+*.a
+*.lib
+
+# Executables
+*.exe
+*.out
+*.app
+
+#
+# ---
+#
+CMakeCache.txt
+CMakeFiles
+CMakeScripts
+Testing
+cmake_install.cmake
+install_manifest.txt
+compile_commands.json
+CTestTestfile.cmake
+build
+build-*
+cmake-build-*
+.idea
+.idea/*
+Index
+Build
+DerivedData
+Pods
+Podfile.lock
+*.xcworkspacedata
+.version
+.vscode
+# Build
+build
+*-build-*
+*.user
+.DS_Store
+workspace.xml
+.debug_authority_pvk.txt
+.debug_authority_pk.txt
+xcuserdata/denn.xcuserdatad
+*.xcuserstate
+
+plugins/ofx/**/config/config.xml
+plugins/ofx/**/meta/package.xml
