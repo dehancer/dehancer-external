@@ -27,3 +27,6 @@ include_directories(
 )
 
 add_library(${CURRENT_TARGET_NAME} ${COMMON_SRC})
+
+install(TARGETS ${PROJECT_LIB} DESTINATION lib)
+install(FILES   ${PUBLIC_INCLUDE_FILES} DESTINATION include/dehancer)
