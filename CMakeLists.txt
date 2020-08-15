@@ -28,5 +28,10 @@ include_directories(
 
 add_library(${CURRENT_TARGET_NAME} ${COMMON_SRC})
 
-install(TARGETS ${PROJECT_LIB} DESTINATION lib)
-install(FILES   ${PUBLIC_INCLUDE_FILES} DESTINATION include/dehancer)
+FILE(GLOB PUBLIC_INCLUDE_FILES
+        ${CMAKE_CURRENT_SOURCE_DIR}/OpenFX/include/*.h
+        ${CMAKE_CURRENT_SOURCE_DIR}/OpenFXS/include/*.h
+        )
+
+install(TARGETS ${CURRENT_TARGET_NAME} DESTINATION lib)
+install(FILES   ${PUBLIC_INCLUDE_FILES} DESTINATION include/openfx)
