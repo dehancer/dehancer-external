@@ -33,9 +33,9 @@ The Open Effects Association Ltd
 London W1D 6PA
 England
 
-
-
 */
+
+#include <string>
 
 /** @file This file contains OFX logging header code
 */
@@ -50,19 +50,19 @@ namespace OFX {
         extern bool use_console;
 
         /** @brief Indent it, not MP sane at the moment */
-        void indent(void);
+        void indent();
 
         /** @brief Outdent it, not MP sane at the moment */
-        void outdent(void);
+        void outdent();
 
         /** @brief Sets the name of the log file. */
         void setFileName(const std::string &value);
 
         /** @brief Opens the log file, returns whether this was sucessful or not. */
-        bool open(void);
+        bool open();
 
         /** @brief Closes the log file. */
-        void close(void);
+        void close();
 
         /** @brief Prints to the log file. */
         void print(const char *format, ...);
