@@ -5,6 +5,7 @@ set(CURRENT_TARGET_NAME OpenFXS)
 # Project
 #
 project(${CURRENT_TARGET_NAME} VERSION 1.4 LANGUAGES CXX)
+option(PRINT_DEBUG OFF)
 
 #
 # CXX 1x
@@ -15,6 +16,10 @@ set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wc++17-extensions")
 set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fdeclspec -fms-extensions")
 # disable developer warnings
 set(CMAKE_POLICY_DEFAULT_CMP0054 NEW)
+
+if(PRINT_DEBUG)
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DPRINT_DEBUG=1")
+endif()
 
 file (GLOB COMMON_SRC ${COMMON_SRC}
         ./OpenFXS/Library/*.cpp
