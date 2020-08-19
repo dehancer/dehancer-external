@@ -42,6 +42,10 @@ England
 #endif
 #endif
 
+#    ifdef PRINT_DEBUG
+#include <iostream>
+#end
+
 #include "ofxsMemory.h"
 #include "ofxsLog.h"
 
