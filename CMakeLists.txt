@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.12)
-set(CURRENT_TARGET_NAME OpenFXS)
+set(CURRENT_TARGET_NAME dehancer_external)
 
 #
 # Project
