@@ -286,6 +286,7 @@ namespace OFX {
         NativeOriginEnum nativeOrigin;
         bool supportsOpenCLRender;
         bool supportsCudaRender;
+        bool supportsCudaStream;
         bool supportsMetalRender;
 #ifdef OFX_SUPPORTS_OPENGLRENDER
         bool supportsOpenGLRender;
@@ -471,6 +472,7 @@ namespace OFX {
 
         /** @brief Does the plugin support CUDA Render, defaults to false */
         void setSupportsCudaRender(bool v);
+        void setSupportsCudaStream (bool v);
 
         /** @brief Does the plugin support Metal Render, defaults to false */
         void setSupportsMetalRender(bool v);
@@ -504,6 +506,7 @@ namespace OFX {
 
         /** @brief override this to create an interact for the effect */
         virtual void setOverlayInteractDescriptor(EffectOverlayDescriptor* desc);
+    
     };
 
     ////////////////////////////////////////////////////////////////////////////////
@@ -799,6 +802,7 @@ namespace OFX {
         bool      isEnabledCudaRender;
         bool      isEnabledMetalRender;
         void*     pOpenCLCmdQ;
+        void*     pCudaStream;
         void*     pMetalCmdQ;
 #ifdef OFX_SUPPORTS_OPENGLRENDER
         bool      openGLEnabled;
@@ -826,6 +830,7 @@ namespace OFX {
         bool      isEnabledCudaRender;
         bool      isEnabledMetalRender;
         void*     pOpenCLCmdQ;
+        void*     pCudaStream;
         void*     pMetalCmdQ;
 #ifdef OFX_SUPPORTS_OPENGLRENDER
         bool      openGLEnabled;
@@ -842,6 +847,7 @@ namespace OFX {
         bool      isEnabledCudaRender;
         bool      isEnabledMetalRender;
         void*     pOpenCLCmdQ;
+        void*     pCudaStream;
         void*     pMetalCmdQ;
 #ifdef OFX_SUPPORTS_OPENGLRENDER
         bool      openGLEnabled;
