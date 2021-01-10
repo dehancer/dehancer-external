@@ -32,7 +32,7 @@ if(LINUX)
 elseif(APPLE)
     set(STATIC_LINKING ON)
     message(STATUS "Apple configuration...")
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC -W -Wall -Wextra -Wno-ignored-qualifiers -Wvariadic-macros ")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC -W -Wall -Wextra -Wno-ignored-qualifiers -Wvariadic-macros -Wno-unused-function")
 endif()
 
 if(PRINT_DEBUG)

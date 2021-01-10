@@ -57,6 +57,30 @@ using the buffer pointers.
 */
 #define kOfxImageEffectPropCudaEnabled "OfxImageEffectPropCudaEnabled"
 
+/**  @brief The stream of Cuda render
+
+    - Type - pointer X 1
+    - Property Set - plugin descriptor (read only), host descriptor (read/write)
+
+This property contains a pointer to the stream of Cuda render (cudaStream_t).
+In order to use it, reinterpret_cast<cudaStream_t>(pointer) is needed.
+
+*/
+#define kOfxImageEffectPropCudaStream "OfxImageEffectPropCudaStream"
+
+
+/**  @brief Indicates whether a host or plugin can support Cuda stream
+
+    - Type - string X 1
+    - Property Set - plugin descriptor (read/write), host descriptor (read only)
+    - Default - "false"
+    - Valid Values - This must be one of
+      - "false"  - in which case the host or plugin does not support Cuda stream
+      - "true"   - which means a host or plugin can support Cuda stream provided
+
+*/
+#define kOfxImageEffectPropCudaStreamSupported "OfxImageEffectPropCudaStreamSupported"
+
 /** @brief Indicates whether a host or plugin can support Cuda render
 
     - Type - string X 1

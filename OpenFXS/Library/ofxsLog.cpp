@@ -54,7 +54,7 @@ namespace OFX {
     namespace Log {
 
         /** @brief log file */
-        static FILE *gLogFP = 0;
+        static FILE *gLogFP = nullptr;
         bool use_console = false;
 
         /// environment variable for the log file
@@ -73,7 +73,7 @@ namespace OFX {
         }
 
         /** @brief Opens the log file, returns whether this was sucessful or not. */
-        bool open(void)
+        bool open()
         {
 #ifdef DEBUG
             if (use_console) {
@@ -82,35 +82,35 @@ namespace OFX {
             else
             if(!gLogFP) {
                 gLogFP = fopen(gLogFileName.c_str(), "w");
-                return gLogFP != 0;
+                return gLogFP != nullptr;
             }
 #endif
-            return gLogFP != 0;
+            return gLogFP != nullptr;
         }
 
         /** @brief Closes the log file. */
-        void close(void)
+        void close()
         {
             if(gLogFP) {
                 fclose(gLogFP);
             }
-            gLogFP = 0;
+            gLogFP = nullptr;
         }
 
         /** @brief Indent it, not MP sane at the moment */
-        void indent(void)
+        void indent()
         {
             ++gIndent;
         }
 
         /** @brief Outdent it, not MP sane at the moment */
-        void outdent(void)
+        void outdent()
         {
             --gIndent;
         }
 
         /** @brief do the indenting */
-        static void doIndent(void)
+        void doIndent()
         {
             if(open()) {
                 for(int i = 0; i < gIndent; i++) {
