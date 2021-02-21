@@ -12,8 +12,8 @@ option(PRINT_DEBUG OFF)
 #
 set (CMAKE_CXX_STANDARD 17)
 set (BUILD_SHARED_LIBS OFF)
-set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wc++17-extensions")
-set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fdeclspec -fms-extensions")
+#set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wc++17-extensions")
+#set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fdeclspec -fms-extensions")
 # disable developer warnings
 set(CMAKE_POLICY_DEFAULT_CMP0054 NEW)
 
@@ -33,6 +33,7 @@ elseif(APPLE)
     set(STATIC_LINKING ON)
     message(STATUS "Apple configuration...")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC -W -Wall -Wextra -Wno-ignored-qualifiers -Wvariadic-macros -Wno-unused-function")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fvisibility=hidden -Wno-unused-parameter")
 endif()
 
 if(PRINT_DEBUG)
