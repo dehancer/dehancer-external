@@ -36,6 +36,16 @@ elseif(APPLE)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fvisibility=hidden -Wno-unused-parameter")
 endif()
 
+if (WIN32)
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -EHsc -Wno-deprecated-declarations")
+    add_definitions(/MT /DWIN32=1 /D_ITERATOR_DEBUG_LEVEL=0)
+    string(TOLOWER  ${CMAKE_BUILD_TYPE} BUILD_TYPE)
+    if (${BUILD_TYPE} STREQUAL "debug")
+        add_definitions(/MTd)
+    endif()
+endif ()
+
+
 if(PRINT_DEBUG)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DPRINT_DEBUG=1 -DDEBUG_BUILD=1")
 endif()

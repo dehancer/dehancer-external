@@ -34,7 +34,7 @@ England
 
 */
 
-#if defined(WIN32) || defined(WIN64)
+#if (defined(WIN32) || defined(WIN64)) && defined(OFXHWND_ENABLED)
 
 /** @brief This file contains code that skins the ofx interact suite (for image effects) */
 
