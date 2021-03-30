@@ -61,7 +61,15 @@ namespace OFX {
 #define kLogFileEnvVar "OFX_PLUGIN_LOGFILE"
 
         /** @brief the global logfile name */
-        static std::string gLogFileName(getenv(kLogFileEnvVar) ? getenv(kLogFileEnvVar) : "/tmp/ofxTestLog.txt");
+        static std::string gLogFileName(
+                std::getenv(kLogFileEnvVar) ?
+                std::getenv(kLogFileEnvVar)
+                #if WIN32
+                : std::getenv("TEMP") ? std::string(std::getenv("TEMP")) + "\\ofxTestLog.txt"
+                #endif
+                :
+                "/tmp/ofxTestLog.txt"
+                );
 
         /** @brief global indent level, not MP sane */
         static int gIndent = 0;
