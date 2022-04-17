@@ -93,9 +93,8 @@ namespace OFX {
             gLogFP = fopen(gLogFileName.c_str(), "a+");
             return gLogFP != nullptr;
           }
-#else
-          return (gLogFP != nullptr);
 #endif
+          return (gLogFP != nullptr);
         }
         
         /** @brief Closes the log file. */
@@ -134,7 +133,7 @@ namespace OFX {
         {
 #if PRINT_DEBUG
           if(open()) {
-  
+            
             std::time_t t = std::time(0);   // get time now
             std::tm now = *std::localtime(&t);
             char       buf[80];
@@ -166,9 +165,9 @@ namespace OFX {
             std::tm now = *std::localtime(&t);
             char       buf[80];
             strftime(buf, sizeof(buf), "%Y-%m-%d.%X", &now);
-  
+            
             doIndent();
-  
+            
             fputs("[", gLogFP);
             fputs(buf, gLogFP);
             fputs("] ", gLogFP);
@@ -192,9 +191,9 @@ namespace OFX {
             std::tm now = *std::localtime(&t);
             char       buf[80];
             strftime(buf, sizeof(buf), "%Y-%m-%d.%X", &now);
-  
+            
             doIndent();
-  
+            
             fputs("[", gLogFP);
             fputs(buf, gLogFP);
             fputs("] ", gLogFP);
@@ -221,9 +220,9 @@ namespace OFX {
             std::tm now = *std::localtime(&t);
             char       buf[80];
             strftime(buf, sizeof(buf), "%Y-%m-%d.%X", &now);
-  
+            
             doIndent();
-  
+            
             fputs("[", gLogFP);
             fputs(buf, gLogFP);
             fputs("] ", gLogFP);
