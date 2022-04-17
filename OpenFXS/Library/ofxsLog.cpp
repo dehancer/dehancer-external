@@ -93,8 +93,9 @@ namespace OFX {
             gLogFP = fopen(gLogFileName.c_str(), "a+");
             return gLogFP != nullptr;
           }
+#else
+          return (gLogFP != nullptr);
 #endif
-          return gLogFP != nullptr;
         }
         
         /** @brief Closes the log file. */
