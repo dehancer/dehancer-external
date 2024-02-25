@@ -47,7 +47,7 @@ The log file is written to using printf style functions, rather than via c++ ios
 #include <string>
 #include <ctime>
 
-#define DEBUG // Uncomment to enable debug log
+#define DEBUG 1 // Uncomment to enable debug log
 
 #include "ofxsLog.h"
 
@@ -84,7 +84,7 @@ namespace OFX {
         /** @brief Opens the log file, returns whether this was sucessful or not. */
         bool open()
         {
-#ifdef DEBUG
+//#ifdef DEBUG
           if (use_console) {
             gLogFP = stderr;
           }
@@ -93,8 +93,8 @@ namespace OFX {
             gLogFP = fopen(gLogFileName.c_str(), "a+");
             return gLogFP != nullptr;
           }
-#endif
-          return (gLogFP != nullptr);
+//#endif
+          return gLogFP != nullptr;
         }
         
         /** @brief Closes the log file. */
@@ -131,7 +131,7 @@ namespace OFX {
         /** @brief Prints to the log file. */
         void print(const char *format, ...)
         {
-#if PRINT_DEBUG
+//#if PRINT_DEBUG
           if(open()) {
             
             std::time_t t = std::time(0);   // get time now
@@ -153,13 +153,13 @@ namespace OFX {
             fflush(gLogFP);
             va_end(args);
           }
-#endif
+//#endif
         }
         
         /** @brief Prints to the log file. */
         void printl(const char *format, ...)
         {
-#if PRINT_DEBUG
+//#if PRINT_DEBUG
           if(open()) {
             std::time_t t = std::time(0);   // get time now
             std::tm now = *std::localtime(&t);
@@ -179,13 +179,13 @@ namespace OFX {
             fflush(gLogFP);
             va_end(args);
           }
-#endif
+//#endif
         }
         
         /** @brief Prints to the log file only if the condition is true and prepends a warning notice. */
         void warning(bool condition, const char *format, ...)
         {
-#if PRINT_DEBUG
+//#if PRINT_DEBUG
           if(condition && open()) {
             std::time_t t = std::time(0);   // get time now
             std::tm now = *std::localtime(&t);
@@ -208,13 +208,13 @@ namespace OFX {
             
             fflush(gLogFP);
           }
-#endif
+//#endif
         }
         
         /** @brief Prints to the log file only if the condition is true and prepends an error notice. */
         void error(bool condition, const char *format, ...)
         {
-#      ifdef PRINT_DEBUG
+//#      ifdef PRINT_DEBUG
           if(condition && open()) {
             std::time_t t = std::time(0);   // get time now
             std::tm now = *std::localtime(&t);
@@ -237,7 +237,7 @@ namespace OFX {
             
             fflush(gLogFP);
           }
-#endif
+//#endif
         }
     };
 };
