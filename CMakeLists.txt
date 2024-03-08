@@ -4,7 +4,7 @@ set(CURRENT_TARGET_NAME dehancer_external)
 #
 # Project
 #
-project(${CURRENT_TARGET_NAME} VERSION 1.4 LANGUAGES CXX C)
+project(${CURRENT_TARGET_NAME} VERSION 1.4.1 LANGUAGES CXX C)
 option(PRINT_DEBUG OFF)
 
 #
@@ -27,12 +27,12 @@ if(LINUX)
         message(FATAL_ERROR "Linux GPU Layer does not suppor Metal SDK")
     endif ()
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC -W -Wall -Wextra -Wno-ignored-qualifiers -Wvariadic-macros")
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fvisibility=hidden -Wno-unused-parameter")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fvisibility=default -Wno-unused-parameter")
 elseif(APPLE)
     set(STATIC_LINKING ON)
     message(STATUS "Apple configuration...")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC -W -Wall -Wextra -Wno-ignored-qualifiers -Wvariadic-macros -Wno-unused-function")
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fvisibility=hidden -Wno-unused-parameter")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fvisibility=default -Wno-unused-parameter")
 endif()
 
 if (WIN32)
@@ -69,6 +69,9 @@ FILE(GLOB PUBLIC_INCLUDE_FILES
         ${CMAKE_CURRENT_SOURCE_DIR}/OpenFX/include/*.h
         ${CMAKE_CURRENT_SOURCE_DIR}/OpenFXS/include/*.h
         )
+
+file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/OpenFX/include/ DESTINATION "${CMAKE_CURRENT_BINARY_DIR}/include/openfx/")
+file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/OpenFXS/include/ DESTINATION "${CMAKE_CURRENT_BINARY_DIR}/include/openfx/")
 
 install(TARGETS ${CURRENT_TARGET_NAME} DESTINATION lib)
 install(FILES   ${PUBLIC_INCLUDE_FILES} DESTINATION include/openfx)

@@ -47,8 +47,6 @@ The log file is written to using printf style functions, rather than via c++ ios
 #include <string>
 #include <ctime>
 
-#define DEBUG // Uncomment to enable debug log
-
 #include "ofxsLog.h"
 
 namespace OFX {
@@ -84,7 +82,7 @@ namespace OFX {
         /** @brief Opens the log file, returns whether this was sucessful or not. */
         bool open()
         {
-#ifdef DEBUG
+#ifdef PRINT_DEBUG
           if (use_console) {
             gLogFP = stderr;
           }
@@ -94,7 +92,7 @@ namespace OFX {
             return gLogFP != nullptr;
           }
 #endif
-          return (gLogFP != nullptr);
+          return gLogFP != nullptr;
         }
         
         /** @brief Closes the log file. */
