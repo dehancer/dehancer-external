@@ -730,6 +730,11 @@ namespace OFX {
       _effectProps.propSetString(kOfxImageEffectPropNoSpatialAwareness, (v ? "true" : "false"));
     }
 
+    void ImageEffectDescriptor::setGetVRAMRequirementsSupported(bool v)
+    {
+      _effectProps.propSetInt("uk.ltd.filmlight.GetVRAMRequirementsSupported", v ? 1 : 0);
+    }
+
 #ifdef OFX_SUPPORTS_OPENGLRENDER
     /** @brief Does the plugin support OpenGL accelerated rendering (but is also capable of CPU rendering) ? */
   void ImageEffectDescriptor::setSupportsOpenGLRender(bool v) {
