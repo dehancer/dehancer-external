@@ -1990,7 +1990,7 @@ namespace OFX {
             gProgressSuiteV1 = (OfxProgressSuiteV1 *)     fetchSuite(kOfxProgressSuite, 1, true);
             gProgressSuiteV2 = (OfxProgressSuiteV2 *)     fetchSuite(kOfxProgressSuite, 2, true);
             gTimeLineSuite   = (OfxTimeLineSuiteV1 *)     fetchSuite(kOfxTimeLineSuite, 1, true);
-            gFilmLightSuiteV1 = (OfxFilmLightSuiteV1 *)     fetchSuite(kOfxFilmLightSuite, 1);
+            gFilmLightSuiteV1 = (OfxFilmLightSuiteV1 *)     fetchSuite(kOfxFilmLightSuite, 1, true);
             // Resolve doesn't support OfxParametricParameterSuiteV1, do not fetch to suppress warning
             //gParametricParameterSuite = (OfxParametricParameterSuiteV1*) fetchSuite(kOfxParametricParameterSuite, 1, true);
 #ifdef OFX_SUPPORTS_OPENGLRENDER
