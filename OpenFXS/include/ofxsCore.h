@@ -99,6 +99,7 @@ of the direct OFX objects and any library side only functions.
 #include "ofxParamExt.h"
 #include "ofxProperty.h"
 #include "ofxPixels.h"
+#include "ofxFilmLight.h"
 
 #include <assert.h>
 #include <vector>

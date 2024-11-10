@@ -156,6 +156,7 @@ namespace OFX {
         OfxProgressSuiteV2    *gProgressSuiteV2 = 0;
         OfxTimeLineSuiteV1    *gTimeLineSuite = 0;
         OfxParametricParameterSuiteV1 *gParametricParameterSuite = 0;
+        OfxFilmLightSuiteV1   *gFilmLightSuiteV1 = 0;
 #ifdef OFX_SUPPORTS_OPENGLRENDER
         OfxImageEffectOpenGLRenderSuiteV1 *gOpenGLRenderSuite = 0;
 #endif
@@ -1570,6 +1571,11 @@ namespace OFX {
     void ImageEffect::endChanged(InstanceChangeReason /*reason*/)
     {
     }
+
+    /** @brief request from Baselight to release memory */
+    void ImageEffect::setAllocatedVRAM(const void * metalDevice, double allocatedVRAM) {
+
+    }
     
     /** @brief get the time domain */
     bool ImageEffect::getTimeDomain(OfxRangeD &/*range*/)
@@ -1984,6 +1990,7 @@ namespace OFX {
             gProgressSuiteV1 = (OfxProgressSuiteV1 *)     fetchSuite(kOfxProgressSuite, 1, true);
             gProgressSuiteV2 = (OfxProgressSuiteV2 *)     fetchSuite(kOfxProgressSuite, 2, true);
             gTimeLineSuite   = (OfxTimeLineSuiteV1 *)     fetchSuite(kOfxTimeLineSuite, 1, true);
+            gFilmLightSuiteV1 = (OfxFilmLightSuiteV1 *)     fetchSuite(kOfxFilmLightSuite, 1);
             // Resolve doesn't support OfxParametricParameterSuiteV1, do not fetch to suppress warning
             //gParametricParameterSuite = (OfxParametricParameterSuiteV1*) fetchSuite(kOfxParametricParameterSuite, 1, true);
 #ifdef OFX_SUPPORTS_OPENGLRENDER
@@ -2033,6 +2040,7 @@ namespace OFX {
             gMessageSuiteV2 = 0;
             gInteractSuite = 0;
             gParametricParameterSuite = 0;
+            gFilmLightSuiteV1 = 0;
           }
           
           {
@@ -2833,6 +2841,15 @@ namespace OFX {
               
               // call the end edit function
               instance->endEdit();
+            }
+            else if (action == "uk.ltd.filmlight.ActionSetAllocatedVRAM") {
+              checkMainHandles(actionRaw, handleRaw, inArgsRaw, outArgsRaw, false, true, true);
+
+              double setVRAM = inArgs.propGetDouble("uk.ltd.filmlight.AllocatedVRAM");
+              void * metalDevice = inArgs.propGetPointer("uk.ltd.filmlight.MetalDevice");
+              OFX::Log::print("Baselight set VRAM: metal %p VRAM %f", metalDevice, setVRAM);
+              ImageEffect *instance = retrieveImageEffectPointer(handle);
+              instance->setAllocatedVRAM(metalDevice, setVRAM);
             }
 #ifdef OFX_SUPPORTS_OPENGLRENDER
               else if(action == kOfxActionOpenGLContextAttached) {

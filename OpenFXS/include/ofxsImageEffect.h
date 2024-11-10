@@ -1190,6 +1190,9 @@ namespace OFX {
         /** @brief the effect has just had some values changed */
         virtual void endChanged(InstanceChangeReason reason);
 
+        /** @brief Baselight memory release request from host */
+        virtual void setAllocatedVRAM(const void * metalDevice, double allocatedVRAM);
+
         /** @brief called when a custom param needs to be interpolated */
         virtual std::string interpolateCustomParam(const InterpolateCustomArgs &args, const std::string &paramName);
 
