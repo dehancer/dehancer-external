@@ -2208,6 +2208,7 @@ namespace OFX {
           args.isEnabledMetalRender  = inArgs.propGetInt(kOfxImageEffectPropMetalEnabled, false) != 0;
           args.pOpenCLCmdQ           = inArgs.propGetPointer(kOfxImageEffectPropOpenCLCommandQueue, false);
           args.pMetalCmdQ            = inArgs.propGetPointer(kOfxImageEffectPropMetalCommandQueue, false);
+          OFX::Log::print("BeginSequenceRender, metalQ %p", args.pMetalCmdQ);
           args.pCudaStream           = inArgs.propGetPointer(kOfxImageEffectPropCudaStream, false);
 
 #ifdef OFX_SUPPORTS_OPENGLRENDER
@@ -2242,6 +2243,7 @@ namespace OFX {
           args.isEnabledMetalRender  = inArgs.propGetInt(kOfxImageEffectPropMetalEnabled, false) != 0;
           args.pOpenCLCmdQ           = inArgs.propGetPointer(kOfxImageEffectPropOpenCLCommandQueue, false);
           args.pMetalCmdQ            = inArgs.propGetPointer(kOfxImageEffectPropMetalCommandQueue, false);
+          OFX::Log::print("EndSequenceRender, metalQ %p", args.pMetalCmdQ);
           args.pCudaStream           = inArgs.propGetPointer(kOfxImageEffectPropCudaStream, false);
 
 #ifdef OFX_SUPPORTS_OPENGLRENDER
