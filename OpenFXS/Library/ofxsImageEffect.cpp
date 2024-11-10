@@ -2843,13 +2843,15 @@ namespace OFX {
               instance->endEdit();
             }
             else if (action == "uk.ltd.filmlight.ActionSetAllocatedVRAM") {
-              checkMainHandles(actionRaw, handleRaw, inArgsRaw, outArgsRaw, false, true, true);
+              checkMainHandles(actionRaw, handleRaw, inArgsRaw, outArgsRaw, true, true, true);
 
               double setVRAM = inArgs.propGetDouble("uk.ltd.filmlight.AllocatedVRAM");
               void * metalDevice = inArgs.propGetPointer("uk.ltd.filmlight.MetalDevice");
-              OFX::Log::print("Baselight set VRAM: metal %p VRAM %f", metalDevice, setVRAM);
-              ImageEffect *instance = retrieveImageEffectPointer(handle);
-              instance->setAllocatedVRAM(metalDevice, setVRAM);
+              OFX::Log::print("Baselight set VRAM: metal %p VRAM %f, handle %p", metalDevice, setVRAM, handle);
+              if (handle) {
+                ImageEffect *instance = retrieveImageEffectPointer(handle);
+                instance->setAllocatedVRAM(metalDevice, setVRAM);
+              }
             }
 #ifdef OFX_SUPPORTS_OPENGLRENDER
               else if(action == kOfxActionOpenGLContextAttached) {
