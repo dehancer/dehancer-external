@@ -1872,8 +1872,11 @@ namespace OFX {
             }
             
             gHostDescription.APIVersionMinor            = hostProps.propGetInt(kOfxPropAPIVersion, 1, false); // OFX 1.2
-            
+
+            std::string nodetype = hostProps.propGetString("uk.ltd.filmlight.nodetype", false);
+
             gHostDescription.hostName                   = hostProps.propGetString(kOfxPropName, true);
+            OFX::Log::print("Host name %s, Node type %s", gHostDescription.hostName, nodetype);
             gHostDescription.hostLabel                  = hostProps.propGetString(kOfxPropLabel, true);
             gHostDescription.versionMajor               = hostProps.propGetInt(kOfxPropVersion, 0, false); // OFX 1.2
             gHostDescription.versionMinor               = hostProps.propGetInt(kOfxPropVersion, 1, false); // OFX 1.2
