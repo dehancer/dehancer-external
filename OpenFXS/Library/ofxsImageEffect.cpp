@@ -1974,7 +1974,7 @@ namespace OFX {
         void loadAction(void)
         {
           gLoadCount++;
-          
+          OFX::Log::print("Load action, count %d", gLoadCount);
           //OfxStatus status = kOfxStatOK;
           
           // fetch the suites
@@ -2026,6 +2026,7 @@ namespace OFX {
         void unloadAction(const char* id)
         {
           gLoadCount--;
+          OFX::Log::print("Unload action, count %d", gLoadCount);
           if (gLoadCount<0) {
             OFX::Log::warning(true, "OFX Plugin '%s' is already unloaded.", id);
             return;
