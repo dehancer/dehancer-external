@@ -11,7 +11,7 @@ this list of conditions and the following disclaimer.
 * Redistributions in binary form must reproduce the above copyright notice,
 this list of conditions and the following disclaimer in the documentation
 and/or other materials provided with the distribution.
-* Neither the name The Open Effects Association Ltd, nor the names of its 
+* Neither the name The Open Effects Association Ltd, nor the names of its
 contributors may be used to endorse or promote products derived from this
 software without specific prior written permission.
 
@@ -60,6 +60,9 @@ namespace OFX {
     /** @brief Pointer to the  interact suite */
     extern OfxInteractSuiteV1    *gInteractSuite;
 
+    /** @brief Pointer to the overlay draw suite */
+    extern OfxDrawSuiteV1        *gDrawSuite;
+
     /** @brief Pointer to the parameter suite */
     extern OfxParameterSuiteV1   *gParamSuite;
 
@@ -93,7 +96,7 @@ namespace OFX {
     /** @brief Support lib function called on an ofx unload action */
     void unloadAction(void);
 
-    /** @brief The plugin function that gets passed the host structure. 
+    /** @brief The plugin function that gets passed the host structure.
     */
     void setHost(OfxHost *host);
 
@@ -166,7 +169,7 @@ namespace OFX {
       OFX::PropertyTypeEnum _ilk;
 
       /** @brief The default value that this property should have. Empty implies no default (eg: a host name has no default). */
-      std::vector<ValueHolder> _defaultValue; 
+      std::vector<ValueHolder> _defaultValue;
 
     public :
       /** @brief var args constructor that is use to describe properties */
@@ -192,7 +195,7 @@ namespace OFX {
       std::vector<PropertyDescription *> _deleteThese;
 
     public :
-      /** @brief constructor. 
+      /** @brief constructor.
 
       The varargs zero terminated are made from pairs of PropertyDescription * and ints indicating the number of properties pointed to.
       These are to come from static arrays and need not be deleted
@@ -206,7 +209,7 @@ namespace OFX {
       void addProperty(PropertyDescription *desc, bool deleteOnDestruction = true);
 
       /** @brief See if all properties exist and have the correct dimensions */
-      void validate(PropertySet &propSet, bool checkDefaults = true, bool logOrdinaryMessages = false); 
+      void validate(PropertySet &propSet, bool checkDefaults = true, bool logOrdinaryMessages = false);
     };
 
 
@@ -250,7 +253,7 @@ namespace OFX {
 
     /** @brief Validates parameter properties */
     void
-      validateParameterProperties(ParamTypeEnum paramType, 
+      validateParameterProperties(ParamTypeEnum paramType,
       OFX::PropertySet paramProps,
       bool checkDefaults);
 

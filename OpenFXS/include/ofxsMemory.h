@@ -55,20 +55,21 @@ namespace OFX {
     /** @brief Allocate memory.
 
     \arg \e nBytes        - the number of bytes to allocate
-    \arg \e handle	      - effect instance to assosciate with this memory allocation, or NULL
+    \arg \e handle        - effect instance to assosciate with this memory allocation, or NULL
 
     This function has the host allocate memory using it's own memory resources
     and returns that to the plugin. This memory is distinct to any image memory allocation.
 
     Suceeds or throws std::bad_alloc
     */
-    void *allocate(size_t nBytes, ImageEffect *handle = nullptr) noexcept (false);
+    void *allocate(size_t nBytes,
+      ImageEffect *handle = 0);
 
     /** @brief release memory
 
-    \arg \e ptr	      - pointer previously returned by OFX::Memory::allocate
+    \arg \e ptr       - pointer previously returned by OFX::Memory::allocate
     */
-    void free(void *ptr) noexcept (false);
+    void free(void *ptr);
   };
 
 };

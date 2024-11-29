@@ -43,6 +43,7 @@ This file only holds code that is visible to a plugin implementation, and so hid
 of the direct OFX objects and any library side only functions.
 */
 #include "ofxsParam.h"
+#include "ofxDrawSuite.h"
 
 #include <list>
 
@@ -75,6 +76,7 @@ namespace OFX {
 #endif
     OfxPointD       pixelScale;        /**< @brief The current effect time to draw at */
     OfxRGBColourD   backGroundColour;  /**< @brief The current background colour, ignore the A */
+    OfxDrawContextHandle context;
   };
 
   /** @brief POD  to pass arguments into OFX::Interact pen actions */
@@ -221,7 +223,7 @@ namespace OFX {
     OverlayInteract(OfxInteractHandle handle);
 
     /** @brief dtor */
-    virtual ~OverlayInteract() override ;
+    virtual ~OverlayInteract();
   };
 
   class InteractDescriptor
@@ -271,10 +273,10 @@ namespace OFX {
 
   namespace Private
   {
-    OfxStatus interactMainEntry(const char		*actionRaw,
-      const void		*handleRaw,
-      OfxPropertySetHandle	 inArgsRaw,
-      OfxPropertySetHandle	 outArgsRaw,
+    OfxStatus interactMainEntry(const char      *actionRaw,
+      const void        *handleRaw,
+      OfxPropertySetHandle   inArgsRaw,
+      OfxPropertySetHandle   outArgsRaw,
       InteractDescriptor& desc);
   }
 

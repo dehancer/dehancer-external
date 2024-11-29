@@ -45,197 +45,120 @@ The log file is written to using printf style functions, rather than via c++ ios
 #include <cstdarg>
 #include <cstdlib>
 #include <string>
-#include <ctime>
 
+//#define DEBUG // Uncomment to enable debug log
 #include "ofxsLog.h"
 
 namespace OFX {
-    namespace Log {
-        
-        /** @brief log file */
-        static FILE *gLogFP = nullptr;
-        bool use_console = false;
-        
-        /// environment variable for the log file
+  namespace Log {
+
+    /** @brief log file */
+    static FILE *gLogFP = 0;
+
+    /// environment variable for the log file
 #define kLogFileEnvVar "OFX_PLUGIN_LOGFILE"
-        
-        /** @brief the global logfile name */
-        static std::string gLogFileName(
-                std::getenv(kLogFileEnvVar) ?
-                std::getenv(kLogFileEnvVar)
-                #if WIN32
-                : std::getenv("TEMP") ? std::string(std::getenv("TEMP")) + "\\ofxTestLog.txt"
-                #endif
-                                            :
-                "/tmp/ofxTestLog.txt"
-        );
-        
-        /** @brief global indent level, not MP sane */
-        static int gIndent = 0;
-        
-        /** @brief Sets the name of the log file. */
-        void setFileName(const std::string &value)
-        {
-          gLogFileName = value;
-        }
-        
-        /** @brief Opens the log file, returns whether this was sucessful or not. */
-        bool open()
-        {
-#ifdef PRINT_DEBUG
-          if (use_console) {
-            gLogFP = stderr;
-          }
-          else
-          if(!gLogFP) {
-            gLogFP = fopen(gLogFileName.c_str(), "a+");
-            return gLogFP != nullptr;
-          }
+
+    /** @brief the global logfile name */
+    static std::string gLogFileName(getenv(kLogFileEnvVar) ? getenv(kLogFileEnvVar) : "ofxTestLog.txt");
+
+    /** @brief global indent level, not MP sane */
+    static int gIndent = 0;
+
+    /** @brief Sets the name of the log file. */
+    void setFileName(const std::string &value)
+    {
+      gLogFileName = value;
+    }
+
+    /** @brief Opens the log file, returns whether this was sucessful or not. */
+    bool open(void)
+    {
+#ifdef DEBUG
+      if(!gLogFP) {
+        gLogFP = fopen(gLogFileName.c_str(), "w");
+        return gLogFP != 0;
+      }
 #endif
-          return gLogFP != nullptr;
+      return gLogFP != 0;
+    }
+
+    /** @brief Closes the log file. */
+    void close(void)
+    {
+      if(gLogFP) {
+        fclose(gLogFP);
+      }
+      gLogFP = 0;
+    }
+
+    /** @brief Indent it, not MP sane at the moment */
+    void indent(void)
+    {
+      ++gIndent;
+    }
+
+    /** @brief Outdent it, not MP sane at the moment */
+    void outdent(void)
+    {
+      --gIndent;
+    }
+
+    /** @brief do the indenting */
+    static void doIndent(void)
+    {
+      if(open()) {
+        for(int i = 0; i < gIndent; i++) {
+          fputs("    ", gLogFP);
         }
-        
-        /** @brief Closes the log file. */
-        void close()
-        {
-          if(gLogFP) {
-            fclose(gLogFP);
-          }
-          gLogFP = nullptr;
-        }
-        
-        /** @brief Indent it, not MP sane at the moment */
-        void indent()
-        {
-          ++gIndent;
-        }
-        
-        /** @brief Outdent it, not MP sane at the moment */
-        void outdent()
-        {
-          --gIndent;
-        }
-        
-        /** @brief do the indenting */
-        void doIndent()
-        {
-          if(open()) {
-            for(int i = 0; i < gIndent; i++) {
-              fputs("    ", gLogFP);
-            }
-          }
-        }
-        
-        /** @brief Prints to the log file. */
-        void print(const char *format, ...)
-        {
-#if PRINT_DEBUG
-          if(open()) {
-            
-            std::time_t t = std::time(0);   // get time now
-            std::tm now = *std::localtime(&t);
-            char       buf[80];
-            strftime(buf, sizeof(buf), "%Y-%m-%d.%X", &now);
-            
-            doIndent();
-            
-            fputs("[", gLogFP);
-            fputs(buf, gLogFP);
-            fputs("] ", gLogFP);
-            fputs("INFO: ", gLogFP);
-            
-            va_list args;
-            va_start(args, format);
-            vfprintf(gLogFP, format, args);
-            fputc('\n', gLogFP);
-            fflush(gLogFP);
-            va_end(args);
-          }
-#endif
-        }
-        
-        /** @brief Prints to the log file. */
-        void printl(const char *format, ...)
-        {
-#if PRINT_DEBUG
-          if(open()) {
-            std::time_t t = std::time(0);   // get time now
-            std::tm now = *std::localtime(&t);
-            char       buf[80];
-            strftime(buf, sizeof(buf), "%Y-%m-%d.%X", &now);
-            
-            doIndent();
-            
-            fputs("[", gLogFP);
-            fputs(buf, gLogFP);
-            fputs("] ", gLogFP);
-            fputs("INFO: ", gLogFP);
-            
-            va_list args;
-            va_start(args, format);
-            vfprintf(gLogFP, format, args);
-            fflush(gLogFP);
-            va_end(args);
-          }
-#endif
-        }
-        
-        /** @brief Prints to the log file only if the condition is true and prepends a warning notice. */
-        void warning(bool condition, const char *format, ...)
-        {
-#if PRINT_DEBUG
-          if(condition && open()) {
-            std::time_t t = std::time(0);   // get time now
-            std::tm now = *std::localtime(&t);
-            char       buf[80];
-            strftime(buf, sizeof(buf), "%Y-%m-%d.%X", &now);
-            
-            doIndent();
-            
-            fputs("[", gLogFP);
-            fputs(buf, gLogFP);
-            fputs("] ", gLogFP);
-            
-            fputs("WARNING : ", gLogFP);
-            
-            va_list args;
-            va_start(args, format);
-            vfprintf(gLogFP, format, args);
-            fputc('\n', gLogFP);
-            va_end(args);
-            
-            fflush(gLogFP);
-          }
-#endif
-        }
-        
-        /** @brief Prints to the log file only if the condition is true and prepends an error notice. */
-        void error(bool condition, const char *format, ...)
-        {
-#      ifdef PRINT_DEBUG
-          if(condition && open()) {
-            std::time_t t = std::time(0);   // get time now
-            std::tm now = *std::localtime(&t);
-            char       buf[80];
-            strftime(buf, sizeof(buf), "%Y-%m-%d.%X", &now);
-            
-            doIndent();
-            
-            fputs("[", gLogFP);
-            fputs(buf, gLogFP);
-            fputs("] ", gLogFP);
-            
-            fputs("ERROR : ", gLogFP);
-            
-            va_list args;
-            va_start(args, format);
-            vfprintf(gLogFP, format, args);
-            fputc('\n', gLogFP);
-            va_end(args);
-            
-            fflush(gLogFP);
-          }
-#endif
-        }
-    };
+      }
+    }
+
+    /** @brief Prints to the log file. */
+    void print(const char *format, ...)
+    {
+      if(open()) {
+        doIndent();
+        va_list args;
+        va_start(args, format);
+        vfprintf(gLogFP, format, args);
+        fputc('\n', gLogFP);
+        fflush(gLogFP);
+        va_end(args);
+      }
+    }
+
+    /** @brief Prints to the log file only if the condition is true and prepends a warning notice. */
+    void warning(bool condition, const char *format, ...)
+    {
+      if(condition && open()) {
+        doIndent();
+        fputs("WARNING : ", gLogFP);
+
+        va_list args;
+        va_start(args, format);
+        vfprintf(gLogFP, format, args);
+        fputc('\n', gLogFP);
+        va_end(args);
+
+        fflush(gLogFP);
+      }
+    }
+
+    /** @brief Prints to the log file only if the condition is true and prepends an error notice. */
+    void error(bool condition, const char *format, ...)
+    {
+      if(condition && open()) {
+        doIndent();
+        fputs("ERROR : ", gLogFP);
+
+        va_list args;
+        va_start(args, format);
+        vfprintf(gLogFP, format, args);
+        fputc('\n', gLogFP);
+        va_end(args);
+
+        fflush(gLogFP);
+      }
+    }
+  };
 };

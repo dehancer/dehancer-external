@@ -1,34 +1,9 @@
+#pragma once
 #ifndef _ofxImageEffect_h_
 #define _ofxImageEffect_h_
 
-/*
-Software License :
-
-Copyright (c) 2003-2015, The Open Effects Association Ltd. All rights reserved.
-
-Redistribution and use in source and binary forms, with or without
-modification, are permitted provided that the following conditions are met:
-
-    * Redistributions of source code must retain the above copyright notice,
-      this list of conditions and the following disclaimer.
-    * Redistributions in binary form must reproduce the above copyright notice,
-      this list of conditions and the following disclaimer in the documentation
-      and/or other materials provided with the distribution.
-    * Neither the name The Open Effects Association Ltd, nor the names of its 
-      contributors may be used to endorse or promote products derived from this
-      software without specific prior written permission.
-
-THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
-ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
-WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR
-ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
-(INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
-LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
-ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
-SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-*/
+// Copyright OpenFX and contributors to the OpenFX project.
+// SPDX-License-Identifier: BSD-3-Clause
 
 #include "ofxCore.h"
 #include "ofxParam.h"
@@ -827,6 +802,19 @@ The entry point pointed to must be one that handles custom interaction actions.
 */
 #define kOfxImageEffectPluginPropOverlayInteractV1 "OfxImageEffectPluginPropOverlayInteractV1"
 
+/** @brief Sets the entry for an effect's overlay interaction. Unlike
+ kOfxImageEffectPluginPropOverlayInteractV1, the overlay interact in the plug-in is expected
+ to implement the kOfxInteractActionDraw using the OfxDrawSuiteV1.
+ 
+   - Type - pointer X 1
+   - Property Set - plugin descriptor (read/write)
+   - Default - NULL
+   - Valid Values - must point to an ::OfxPluginEntryPoint
+
+The entry point pointed to must be one that handles custom interaction actions.
+*/
+#define kOfxImageEffectPluginPropOverlayInteractV2 "OfxImageEffectPluginPropOverlayInteractV2"
+
 /** @brief Indicates whether a plugin or host support multiple resolution images.
 
    - Type - int X 1
@@ -1252,9 +1240,15 @@ This contains the duration of the plug-in effect, in frames.
 /**  @brief The pixel data pointer of an image.
 
     - Type - pointer X 1
-    - Property Set - an image  instance (read only)
+    - Property Set - an image instance (read only)
 
-This property contains a pointer to memory that is the lower left hand corner of an image.
+This property contains one of:
+  - a pointer to memory that is the lower left hand corner of an image
+  - a pointer to Cuda memory, if the Render action arguments includes kOfxImageEffectPropCudaEnabled=1
+  - an id<MTLBuffer>, if the Render action arguments includes kOfxImageEffectPropMetalEnabled=1
+  - a cl_mem, if the Render action arguments includes kOfxImageEffectPropOpenCLEnabled=1
+
+See \ref kOfxImageEffectPropCudaEnabled, \ref kOfxImageEffectPropMetalEnabled and \ref kOfxImageEffectPropOpenCLEnabled
 */
 #define kOfxImagePropData "OfxImagePropData"
 
@@ -1300,7 +1294,7 @@ For various alignment reasons, a row of pixels may need to be padded at the end 
 This property indicates the number of bytes in a row of pixels. This will be at least sizeof(PIXEL) * (bounds.x2-bounds.x1). Where bounds
 is fetched from the ::kOfxImagePropBounds property.
 
-Note that row bytes can be negative, which allows hosts with a native top down row order to pass image into OFX without having to repack pixels.
+Note that (for CPU images only, not Cuda/Metal/OpenCL buffers, nor textures accessed via the OpenGL Render Suite) row bytes can be negative, which allows hosts with a native top down row order to pass image into OFX without having to repack pixels.
  */
 #define kOfxImagePropRowBytes "OfxImagePropRowBytes"
 
@@ -1393,7 +1387,6 @@ This will be in \ref PixelCoordinates
 
  */
 #define kOfxImageEffectPropRenderWindow "OfxImageEffectPropRenderWindow"
-
 
 /** String used to label imagery as having no fields */
 #define kOfxImageFieldNone "OfxFieldNone"

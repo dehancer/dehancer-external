@@ -16,7 +16,7 @@ this list of conditions and the following disclaimer.
 * Redistributions in binary form must reproduce the above copyright notice,
 this list of conditions and the following disclaimer in the documentation
 and/or other materials provided with the distribution.
-* Neither the name The Open Effects Association Ltd, nor the names of its 
+* Neither the name The Open Effects Association Ltd, nor the names of its
 contributors may be used to endorse or promote products derived from this
 software without specific prior written permission.
 
@@ -52,7 +52,7 @@ of the direct OFX objects and any library side only functions.
 /** @brief Nasty macro used to define empty protected copy ctors and assign ops */
 #define mDeclareProtectedAssignAndCC(CLASS) \
   CLASS &operator=(const CLASS &) {assert(false); return *this;}      \
-  CLASS(const CLASS &) {assert(false); } 
+  CLASS(const CLASS &) {assert(false); }
 
 /** @brief The core 'OFX Support' namespace, used by plugin implementations. All code for these are defined in the common support libraries.
 */
@@ -90,12 +90,12 @@ namespace OFX {
     PropertySet        _interactProperties; /**< @brief The property set on this interact */
     ImageEffect*       _effect;             /**< @brief The instance we are associated with */
 
-  public : 
+  public :
     /** @brief ctor */
     HWNDInteract(OfxInteractHandle handle);
 
     /** @brief virtual destructor */
-    virtual ~HWNDInteract(); 
+    virtual ~HWNDInteract();
 
     PropertySet &getProperties() { return _interactProperties; }
 
@@ -112,21 +112,21 @@ namespace OFX {
 
     /** @brief the function called to handle pen motion in the interact
 
-    returns true if the interact trapped the action in some sense. This will block the action being passed to 
+    returns true if the interact trapped the action in some sense. This will block the action being passed to
     any other interact that may share the viewer.
     */
     virtual bool moveWindow(const MoveWindowArgs &args);
 
-    /** @brief the function called to handle pen down events in the interact 
+    /** @brief the function called to handle pen down events in the interact
 
-    returns true if the interact trapped the action in some sense. This will block the action being passed to 
+    returns true if the interact trapped the action in some sense. This will block the action being passed to
     any other interact that may share the viewer.
     */
     virtual bool disposeWindow(const HWNDInteractArgs &args);
 
-    /** @brief the function called to handle pen up events in the interact 
+    /** @brief the function called to handle pen up events in the interact
 
-    returns true if the interact trapped the action in some sense. This will block the action being passed to 
+    returns true if the interact trapped the action in some sense. This will block the action being passed to
     any other interact that may share the viewer.
     */
     virtual bool showWindow(const HWNDInteractArgs &args);

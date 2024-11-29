@@ -39,6 +39,7 @@ England
 
 #include "ofxsSupportPrivate.h"
 #include <algorithm> // for find
+#include "ofxDrawSuite.h"
 
 /** @brief The core 'OFX Support' namespace, used by plugin implementations. All code for these are defined in the common support libraries.
 */
@@ -340,6 +341,7 @@ namespace OFX {
 #endif
     backGroundColour = getBackgroundColour(props);
     pixelScale       = getPixelScale(props);
+    context          = (OfxDrawContextHandle)props.propGetPointer(kOfxInteractPropDrawContext, false);
   }
 
   /** @brief ctor */

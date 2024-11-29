@@ -131,7 +131,7 @@ struct Ofx3DPointD {
 
 /** @brief Nasty macro used to define empty protected copy ctors and assign ops */
 #define mDeclareProtectedAssignAndCC(CLASS) \
-  CLASS &operator=(const CLASS &) {assert(false); return *this;}	\
+  CLASS &operator=(const CLASS &) {assert(false); return *this;}    \
   CLASS(const CLASS &) {assert(false); }
 
 /** @brief The core 'OFX Support' namespace, used by plugin implementations. All code for these are defined in the common support libraries.
@@ -247,10 +247,10 @@ namespace OFX {
 
   /** @brief Throws an @ref OFX::Exception::Suite depending on the status flag passed in */
   void
-    throwSuiteStatusException(OfxStatus stat) noexcept (false);
+    throwSuiteStatusException(OfxStatus stat);
 
   void
-    throwHostMissingSuiteException(std::string name) noexcept (false);
+    throwHostMissingSuiteException(std::string name);
 
   /** @brief This struct is used to return an identifier for the plugin by the function @ref OFX:Plugin::getPlugin.
   The members correspond to those in the OfxPlugin struct defined in ofxCore.h.
@@ -294,71 +294,67 @@ namespace OFX {
     /** @brief return the handle for this property set */
     OfxPropertySetHandle propSetHandle(void) const {return _propHandle;}
 
-    int  propGetDimension(const char* property, bool throwOnFailure = true) const noexcept (false);
-
-    void propReset(const char* property) noexcept (false);
+    int  propGetDimension(const char* property, bool throwOnFailure = true) const;
+    void propReset(const char* property);
 
     // set single values
-    void propSetPointer(const char* property, void *value, int idx, bool throwOnFailure = true) noexcept (false);
-
-    void propSetString(const char* property, const std::string &value, int idx, bool throwOnFailure = true) noexcept (false);
-
-    void propSetDouble(const char* property, double value, int idx, bool throwOnFailure = true) noexcept (false);
-
-    void propSetInt(const char* property, int value, int idx, bool throwOnFailure = true) noexcept (false);
+    void propSetPointer(const char* property, void *value, int idx, bool throwOnFailure = true);
+    void propSetString(const char* property, const std::string &value, int idx, bool throwOnFailure = true);
+    void propSetDouble(const char* property, double value, int idx, bool throwOnFailure = true);
+    void propSetInt(const char* property, int value, int idx, bool throwOnFailure = true);
 
     // set multiple values
-    void propSetDoubleN(const char* property, const double *value, int count, bool throwOnFailure = true) noexcept (false);
+    void propSetDoubleN(const char* property, const double *value, int count, bool throwOnFailure = true);
 
-    void propSetPointer(const char* property, void *value, bool throwOnFailure = true) noexcept (false)
+    void propSetPointer(const char* property, void *value, bool throwOnFailure = true)
     {propSetPointer(property, value, 0, throwOnFailure);}
 
-    void propSetString(const char* property, const std::string &value, bool throwOnFailure = true) noexcept (false)
+    void propSetString(const char* property, const std::string &value, bool throwOnFailure = true)
     {propSetString(property, value, 0, throwOnFailure);}
 
-    void propSetDouble(const char* property, double value, bool throwOnFailure = true) noexcept (false)
+    void propSetDouble(const char* property, double value, bool throwOnFailure = true)
     {propSetDouble(property, value, 0, throwOnFailure);}
 
-    void propSetInt(const char* property, int value, bool throwOnFailure = true) noexcept (false)
+    void propSetInt(const char* property, int value, bool throwOnFailure = true)
     {propSetInt(property, value, 0, throwOnFailure);}
 
 
     /// get a pointer property
-    void       *propGetPointer(const char* property, int idx, bool throwOnFailure = true) const noexcept (false);
+    void       *propGetPointer(const char* property, int idx, bool throwOnFailure = true) const;
 
     /// get a string property
-    std::string propGetString(const char* property, int idx, bool throwOnFailure = true) const noexcept (false);
+    std::string propGetString(const char* property, int idx, bool throwOnFailure = true) const;
     /// get a double property
-    double      propGetDouble(const char* property, int idx, bool throwOnFailure = true) const noexcept (false);
+    double      propGetDouble(const char* property, int idx, bool throwOnFailure = true) const;
 
     /// get an int property
-    int propGetInt(const char* property, int idx, bool throwOnFailure = true) const noexcept (false);
+    int propGetInt(const char* property, int idx, bool throwOnFailure = true) const;
 
     /// get a pointer property with index 0
-    void* propGetPointer(const char* property, bool throwOnFailure = true) const noexcept (false)
+    void* propGetPointer(const char* property, bool throwOnFailure = true) const
     {
       return propGetPointer(property, 0, throwOnFailure);
     }
 
     /// get a string property with index 0
-    std::string propGetString(const char* property, bool throwOnFailure = true) const noexcept (false)
+    std::string propGetString(const char* property, bool throwOnFailure = true) const
     {
       return propGetString(property, 0, throwOnFailure);
     }
 
     /// get a double property with index 0
-    double propGetDouble(const char* property, bool throwOnFailure = true) const noexcept (false)
+    double propGetDouble(const char* property, bool throwOnFailure = true) const
     {
       return propGetDouble(property, 0, throwOnFailure);
     }
 
     /// get an int property with index 0
-    int propGetInt(const char* property, bool throwOnFailure = true) const noexcept (false)
+    int propGetInt(const char* property, bool throwOnFailure = true) const
     {
       return propGetInt(property, 0, throwOnFailure);
     }
 
-    std::list<std::string> propGetNString(const char* property, bool throwOnFailure = true) const noexcept (false);
+    std::list<std::string> propGetNString(const char* property, bool throwOnFailure = true) const;
 
   };
 

@@ -278,8 +278,8 @@ namespace OFX {
       bool checkDefaults,
       bool logOrdinaryMessages)
     {
-//      OFX::Log::print("START validating properties of %s.", _setName.c_str());
-//      OFX::Log::indent();
+      OFX::Log::print("START validating properties of %s.", _setName.c_str());
+      OFX::Log::indent();
 
       // don't print ordinary messages whilst we are checking them
       if(!logOrdinaryMessages) PropertySet::propDisableLogging();
@@ -291,8 +291,8 @@ namespace OFX {
 
       if(!logOrdinaryMessages) PropertySet::propEnableLogging();
 
-//      OFX::Log::outdent();
-//      OFX::Log::print("STOP property validation of %s.", _setName.c_str());
+      OFX::Log::outdent();
+      OFX::Log::print("STOP property validation of %s.", _setName.c_str());
     }
 
 
@@ -363,6 +363,7 @@ namespace OFX {
 
       // Pointer props with defaults that can be checked against
       PropertyDescription(kOfxImageEffectPluginPropOverlayInteractV1,      OFX::ePointer, 1, eDescDefault, (void *)(0), eDescFinished),
+      PropertyDescription(kOfxImageEffectPluginPropOverlayInteractV2,      OFX::ePointer, 1, eDescDefault, (void *)(0), eDescFinished),
 
       // string props that have variable dimension, and can't be checked against for defaults
       PropertyDescription(kOfxImageEffectPropSupportedContexts,  OFX::eString, -1, eDescFinished),

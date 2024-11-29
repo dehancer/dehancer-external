@@ -11,7 +11,7 @@ this list of conditions and the following disclaimer.
 * Redistributions in binary form must reproduce the above copyright notice,
 this list of conditions and the following disclaimer in the documentation
 and/or other materials provided with the distribution.
-* Neither the name The Open Effects Association Ltd, nor the names of its 
+* Neither the name The Open Effects Association Ltd, nor the names of its
 contributors may be used to endorse or promote products derived from this
 software without specific prior written permission.
 
@@ -34,7 +34,7 @@ England
 
 */
 
-#if (defined(WIN32) || defined(WIN64)) && defined(OFXHWND_ENABLED)
+#if defined(WIN32) || defined(WIN64)
 
 /** @brief This file contains code that skins the ofx interact suite (for image effects) */
 
@@ -78,7 +78,7 @@ namespace OFX {
     // get the effect handle from this handle
     OfxImageEffectHandle effectHandle = (OfxImageEffectHandle) interactProperties.propGetPointer(kOfxPropEffectInstance);
 
-    // get the effect properties 
+    // get the effect properties
     return OFX::Private::retrieveImageEffectPointer(effectHandle);
   }
 
@@ -96,7 +96,7 @@ namespace OFX {
     // set othe instance data on the property handle to point to this interact
     _interactProperties.propSetPointer(kOfxPropInstanceData, (void *)this);
 
-    // get the effect handle from this handle        
+    // get the effect handle from this handle
     _effect = retrieveEffectFromInteractHandle(handle);
   }
 
@@ -115,7 +115,7 @@ namespace OFX {
   }
 
   /** @brief the function called to draw in the interact */
-  bool 
+  bool
     HWNDInteract::createWindow(const CreateWindowArgs &args, PropertySet &outArgs)
   {
     return false;
@@ -123,32 +123,32 @@ namespace OFX {
 
   /** @brief the function called to handle pen motion in the interact
 
-  returns true if the interact trapped the action in some sense. This will block the action being passed to 
+  returns true if the interact trapped the action in some sense. This will block the action being passed to
   any other interact that may share the viewer.
   */
-  bool 
+  bool
     HWNDInteract::disposeWindow(const HWNDInteractArgs &args)
   {
     return false;
   }
 
-  /** @brief the function called to handle pen down events in the interact 
+  /** @brief the function called to handle pen down events in the interact
 
-  returns true if the interact trapped the action in some sense. This will block the action being passed to 
+  returns true if the interact trapped the action in some sense. This will block the action being passed to
   any other interact that may share the viewer.
   */
-  bool 
+  bool
     HWNDInteract::moveWindow(const MoveWindowArgs &args)
   {
     return false;
   }
 
-  /** @brief the function called to handle pen up events in the interact 
+  /** @brief the function called to handle pen up events in the interact
 
-  returns true if the interact trapped the action in some sense. This will block the action being passed to 
+  returns true if the interact trapped the action in some sense. This will block the action being passed to
   any other interact that may share the viewer.
   */
-  bool 
+  bool
     HWNDInteract::showWindow(const HWNDInteractArgs &args)
   {
     return false;
@@ -176,7 +176,7 @@ namespace OFX {
 
   namespace Private {
     /** @brief fetches our pointer out of the props on the handle */
-    HWNDInteract *retrieveHWNDInteractPointer(OfxInteractHandle handle) 
+    HWNDInteract *retrieveHWNDInteractPointer(OfxInteractHandle handle)
     {
       HWNDInteract *instance;
 
@@ -282,7 +282,7 @@ namespace OFX {
           desc.setPropertySet(&interactProperties);
           desc.describe();
         }
-        else if (action == kOfxActionCreateInstance) 
+        else if (action == kOfxActionCreateInstance)
         {
           // fetch the image effect we are being made for out of the interact's property handle
           ImageEffect *effect = retrieveEffectFromInteractHandle(handle);
@@ -309,6 +309,4 @@ namespace OFX {
 
 }; // end of namespace
 
-#else
-void foo() {};
 #endif // #if defined(WIN32) || defined(WIN64)

@@ -42,16 +42,12 @@ England
 #endif
 #endif
 
-#    ifdef PRINT_DEBUG
-#include <iostream>
-#endif
-
 #include "ofxsMemory.h"
 #include "ofxsLog.h"
 
 namespace OFX {
   /** @brief Throws an @ref OFX::Exception depending on the status flag passed in */
-  void throwSuiteStatusException(OfxStatus stat) noexcept (false)
+  void throwSuiteStatusException(OfxStatus stat)
   {
     switch (stat)
     {
@@ -65,7 +61,7 @@ namespace OFX {
       throw std::bad_alloc();
 
     default :
-#    ifdef PRINT_DEBUG
+#    ifdef DEBUG_BUILD
       std::cout << "Threw suite exception!" << std::endl;
       OFX::Log::print("\nThrew suite exception %s:", mapStatusToString(stat));
 #     if defined(__APPLE__) || defined(linux)
@@ -83,9 +79,9 @@ namespace OFX {
     }
   }
 
-  void throwHostMissingSuiteException(std::string name) noexcept (false)
+  void throwHostMissingSuiteException(std::string name)
   {
-#  ifdef PRINT_DEBUG
+#  ifdef DEBUG_BUILD
     std::cout << "Threw suite exception! Host missing '" << name << "' suite." << std::endl;
 #   if defined(__APPLE__) || defined(linux)
     void* callstack[128];
@@ -130,7 +126,7 @@ namespace OFX {
   /** @brief namespace for memory allocation that is done via wrapping the ofx memory suite */
   namespace Memory {
     /** @brief allocate n bytes, returns a pointer to it */
-    void *allocate(size_t nBytes, ImageEffect *effect) noexcept (false)
+    void *allocate(size_t nBytes, ImageEffect *effect)
     {
       void *data = 0;
       OfxStatus stat = OFX::Private::gMemorySuite->memoryAlloc((void *)(effect ? effect->getHandle() : 0), nBytes, &data);
@@ -140,7 +136,7 @@ namespace OFX {
     }
 
     /** @brief free n previously allocated memory */
-    void free(void *ptr) noexcept (false)
+    void free(void *ptr)
     {
       if(ptr)
         // note we are ignore errors, this could be bad, but we don't throw on a destruction

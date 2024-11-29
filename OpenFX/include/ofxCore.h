@@ -1,34 +1,8 @@
 #ifndef _ofxCore_h_
 #define _ofxCore_h_
 
-/*
-Software License :
-
-Copyright (c) 2003-2015, The Open Effects Association Ltd. All rights reserved.
-
-Redistribution and use in source and binary forms, with or without
-modification, are permitted provided that the following conditions are met:
-
-    * Redistributions of source code must retain the above copyright notice,
-      this list of conditions and the following disclaimer.
-    * Redistributions in binary form must reproduce the above copyright notice,
-      this list of conditions and the following disclaimer in the documentation
-      and/or other materials provided with the distribution.
-    * Neither the name The Open Effects Association Ltd, nor the names of its
-      contributors may be used to endorse or promote products derived from this
-      software without specific prior written permission.
-
-THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
-ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
-WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR
-ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
-(INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
-LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
-ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
-SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-*/
+// Copyright OpenFX and contributors to the OpenFX project.
+// SPDX-License-Identifier: BSD-3-Clause
 
 
 #include "stddef.h" // for size_t
@@ -185,6 +159,8 @@ These are the actions passed to a plug-in's 'main' function
  The \ref handle, \ref inArgs and \ref outArgs arguments to the \ref mainEntry
  are redundant and should be set to NULL.
 
+ 
+
  \pre
  - The plugin's \ref OfxPlugin::setHost function has been called
 
@@ -194,8 +170,10 @@ These are the actions passed to a plug-in's 'main' function
  @returns
  -  \ref kOfxStatOK, the action was trapped and all was well,
  -  \ref kOfxStatReplyDefault, the action was ignored,
- -  \ref kOfxStatFailed, the load action failed, no further actions will be
- passed to the plug-in,
+ -  \ref kOfxStatFailed, the load action failed, no further actions will be passed to the plug-in.
+ Interpret if possible  kOfxStatFailed as plug-in indicating it does not want to load 
+ Do not create an entry in the host's UI for plug-in then.  
+ Plug-in also has the option to return 0 for OfxGetNumberOfPlugins or kOfxStatFailed if host supports OfxSetHost in which case kOfxActionLoad will never be called.
  -  \ref kOfxStatErrFatal, fatal error in the plug-in.
  */
 #define  kOfxActionLoad "OfxActionLoad"
@@ -234,7 +212,8 @@ These are the actions passed to a plug-in's 'main' function
      without worrying about it changing between actions).
      -  \ref kOfxImageEffectActionDescribeInContext
      will be called once for each context that the host and plug-in
-     mutually support.
+     mutually support.  If a plug-in does not report to support any context supported by host, 
+	 host should not enable the plug-in.
 
  @returns
      -  \ref kOfxStatOK, the action was trapped and all was well
@@ -580,6 +559,17 @@ OfxExport OfxPlugin *OfxGetPlugin(int nth);
  */
 OfxExport int OfxGetNumberOfPlugins(void);
 
+/** @brief First thing host should call
+*
+* This host call, added in 2020, is not specified in earlier implementation of the API.
+* Therefore host must check if the plugin implemented it and not assume symbol exists.
+* The order of calls is then:  1) OfxSetHost, 2) OfxGetNumberOfPlugins, 3) OfxGetPlugin
+* The host pointer is only assumed valid until OfxGetPlugin where it might get reset.
+* Plug-in can return kOfxStatFailed to indicate it has nothing to do here, it's not for this Host and it should be skipped silently.
+*/
+
+OfxExport  OfxStatus OfxSetHost(const OfxHost *host);
+
 /**
    \defgroup PropertiesAll Ofx Properties
 
@@ -901,7 +891,7 @@ General status codes start at 1 and continue until 999
 /** @brief Status code indicating all was fine */
 #define kOfxStatOK 0
 
-/** @brief Status error code for a failed operation */
+/** @brief Status error code for a failed operation. */
 #define kOfxStatFailed  ((int)1)
 
 /** @brief Status error code for a fatal error

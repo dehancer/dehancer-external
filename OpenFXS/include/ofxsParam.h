@@ -53,10 +53,10 @@ each represent the actions that can be carried out on those particular OFX objec
 
 /** @brief Nasty macro used to define empty protected copy ctors and assign ops */
 #define mDeclareProtectedAssignAndCC(CLASS) \
-  CLASS &operator=(const CLASS &) {assert(false); return *this;}	\
+  CLASS &operator=(const CLASS &) {assert(false); return *this;}    \
   CLASS(const CLASS &) {assert(false); }
 #define mDeclareProtectedAssignAndCCBase(CLASS,BASE) \
-  CLASS &operator=(const CLASS &) {assert(false); return *this;}	\
+  CLASS &operator=(const CLASS &) {assert(false); return *this;}    \
   CLASS(const CLASS &c) : BASE(c) {assert(false); }
 
 /** @brief The core 'OFX Support' namespace, used by plugin implementations. All code for these are defined in the common support libraries.
@@ -623,7 +623,7 @@ namespace OFX {
 
     ////////////////////////////////////////////////////////////////////////////////
     /** @brief Wraps up a string choice param */
-    class  StrChoiceParamDescriptor : public ValueParamDescriptor
+    class StrChoiceParamDescriptor : public ValueParamDescriptor
     {
     protected :
         mDeclareProtectedAssignAndCCBase(StrChoiceParamDescriptor, ValueParamDescriptor);
@@ -635,7 +635,7 @@ namespace OFX {
 
         // so it can make one
         friend class ParamSetDescriptor;
-        
+
     public :
         /** @brief set the default value */
         void setDefault(const std::string& p_DefaultValue);
@@ -734,7 +734,7 @@ namespace OFX {
 
         void setRange( const double min, const double max );
 
-        void setDimensionLabel( const std::string& label, const int id );
+        void setDimensionLabel(const std::string& label, const int id );
 
         void setUIColour( const int id, const OfxRGBColourD& color );
 
@@ -1006,7 +1006,7 @@ namespace OFX {
         unsigned int getNumKeys(void);
 
         /** @brief get the time of the nth key, nth must be between 0 and getNumKeys-1 */
-        double getKeyTime(int nthKey) noexcept (false);
+        double getKeyTime(int nthKey);
 
         /** @brief find the index of a key by a time */
         int getKeyIndex(double time,
@@ -1569,7 +1569,7 @@ namespace OFX {
 
         // so it can make one
         friend class ParamSet;
-        
+
     public :
         /** @brief how many options do we have */
         int getNOptions();

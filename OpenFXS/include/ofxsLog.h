@@ -33,9 +33,9 @@ The Open Effects Association Ltd
 London W1D 6PA
 England
 
-*/
 
-#include <string>
+
+*/
 
 /** @file This file contains OFX logging header code
 */
@@ -44,36 +44,32 @@ England
 */
 namespace OFX {
 
-    /** @brief this namespace wraps up logging functionality */
-    namespace Log {
+  /** @brief this namespace wraps up logging functionality */
+  namespace Log {
+    /** @brief Indent it, not MP sane at the moment */
+    void indent(void);
 
-        extern bool use_console;
+    /** @brief Outdent it, not MP sane at the moment */
+    void outdent(void);
 
-        /** @brief Indent it, not MP sane at the moment */
-        void indent();
+    /** @brief Sets the name of the log file. */
+    void setFileName(const std::string &value);
 
-        /** @brief Outdent it, not MP sane at the moment */
-        void outdent();
+    /** @brief Opens the log file, returns whether this was sucessful or not. */
+    bool open(void);
 
-        /** @brief Sets the name of the log file. */
-        void setFileName(const std::string &value);
+    /** @brief Closes the log file. */
+    void close(void);
 
-        /** @brief Opens the log file, returns whether this was sucessful or not. */
-        bool open();
+    /** @brief Prints to the log file. */
+    void print(const char *format, ...);
 
-        /** @brief Closes the log file. */
-        void close();
+    /** @brief Prints to the log file only if the condition is true and prepends a warning notice. */
+    void warning(bool condition, const char *format, ...);
 
-        /** @brief Prints to the log file. */
-        void print(const char *format, ...);
-        void printl(const char *format, ...);
-
-        /** @brief Prints to the log file only if the condition is true and prepends a warning notice. */
-        void warning(bool condition, const char *format, ...);
-
-        /** @brief Prints to the log file only if the condition is true and prepends an error notice. */
-        void error(bool condition, const char *format, ...);
-    };
+    /** @brief Prints to the log file only if the condition is true and prepends an error notice. */
+    void error(bool condition, const char *format, ...);
+  };
 };
 
 #endif
