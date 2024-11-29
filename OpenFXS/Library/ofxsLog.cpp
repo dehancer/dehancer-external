@@ -46,7 +46,10 @@ The log file is written to using printf style functions, rather than via c++ ios
 #include <cstdlib>
 #include <string>
 
-//#define DEBUG // Uncomment to enable debug log
+#ifdef PRINT_DEBUG
+#define DEBUG // Uncomment to enable debug log
+#endif
+
 #include "ofxsLog.h"
 
 namespace OFX {
