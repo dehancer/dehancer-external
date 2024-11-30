@@ -2017,6 +2017,14 @@ namespace OFX {
 
       if(gLoadCount==0)
       {
+
+        // This is the last time we've been unloaded, so we can release our suites
+        //
+        // BUT IT DOES NOT WORK HERE!, as the suites are shared by all instances of the plugin
+        // in multi-threaded environments.
+        //
+
+        
         // force these to null
         // gEffectSuite = 0;
         // gPropSuite = 0;
