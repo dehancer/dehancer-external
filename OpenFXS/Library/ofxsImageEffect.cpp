@@ -1862,8 +1862,8 @@ namespace OFX {
           gHostDescription.APIVersionMajor = 1;
         }
         gHostDescription.APIVersionMinor            = hostProps.propGetInt(kOfxPropAPIVersion, 1, false); // OFX 1.2
-        gHostDescription.hostName                   = hostProps.propGetString(kOfxPropName);
-        gHostDescription.hostLabel                  = hostProps.propGetString(kOfxPropLabel);
+        gHostDescription.hostName                   = "DaVinciResolve"; //hostProps.propGetString(kOfxPropName);
+        gHostDescription.hostLabel                  = "DaVinci Resolve"; //hostProps.propGetString(kOfxPropLabel);
         gHostDescription.versionMajor               = hostProps.propGetInt(kOfxPropVersion, 0, false); // OFX 1.2
         gHostDescription.versionMinor               = hostProps.propGetInt(kOfxPropVersion, 1, false); // OFX 1.2
         gHostDescription.versionMicro               = hostProps.propGetInt(kOfxPropVersion, 2, false); // OFX 1.2
