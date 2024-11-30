@@ -81,12 +81,15 @@ namespace OFX {
   /** @brief Do we throw an exception if a host returns 'unsupported' when setting a property */
   bool PropertySet::_gThrowOnUnsupported = true;
 
+  static std::mutex prop_g_mutex;
+
   /** @brief Virtual destructor */
   PropertySet::~PropertySet() {}
 
   /** @brief, returns the dimension of the given property from this property set */
   int PropertySet::propGetDimension(const char* property, bool throwOnFailure) const
   {
+    std::lock_guard<std::mutex> lock(prop_g_mutex);
     assert(_propHandle != 0);
     int dimension = 0;
     OfxStatus stat = gPropSuite->propGetDimension(_propHandle, property, &dimension);
@@ -103,6 +106,7 @@ namespace OFX {
   /** @brief, resets the property to it's default value */
   void PropertySet::propReset(const char* property)
   {
+    std::lock_guard<std::mutex> lock(prop_g_mutex);
     assert(_propHandle != 0);
     OfxStatus stat = gPropSuite->propReset(_propHandle, property);
     Log::error(stat != kOfxStatOK, "Failed on reseting property %s to its defaults, host returned status %s.", property, mapStatusToString(stat));
@@ -114,6 +118,7 @@ namespace OFX {
   /** @brief, Set a single dimension pointer property */
   void PropertySet::propSetPointer(const char* property, void *value, int idx, bool throwOnFailure)
   {
+    std::lock_guard<std::mutex> lock(prop_g_mutex);
     assert(_propHandle != 0);
     OfxStatus stat = gPropSuite->propSetPointer(_propHandle, property, idx, value);
     OFX::Log::error(stat != kOfxStatOK, "Failed on setting pointer property %s[%d] to %p, host returned status %s;",
@@ -127,6 +132,7 @@ namespace OFX {
   /** @brief, Set a single dimension string property */
   void PropertySet::propSetString(const char* property, const std::string &value, int idx, bool throwOnFailure)
   {
+    std::lock_guard<std::mutex> lock(prop_g_mutex);
     assert(_propHandle != 0);
     OfxStatus stat = gPropSuite->propSetString(_propHandle, property, idx, value.c_str());
     OFX::Log::error(stat != kOfxStatOK, "Failed on setting string property %s[%d] to %s, host returned status %s;",
@@ -140,6 +146,7 @@ namespace OFX {
   /** @brief, Set a single dimension double property */
   void PropertySet::propSetDouble(const char* property, double value, int idx, bool throwOnFailure)
   {
+    std::lock_guard<std::mutex> lock(prop_g_mutex);
     assert(_propHandle != 0);
     OfxStatus stat = gPropSuite->propSetDouble(_propHandle, property, idx, value);
     OFX::Log::error(stat != kOfxStatOK, "Failed on setting double property %s[%d] to %lf, host returned status %s;",
@@ -153,6 +160,7 @@ namespace OFX {
   /** @brief, Set a single dimension int property */
   void PropertySet::propSetInt(const char* property, int value, int idx, bool throwOnFailure)
   {
+    std::lock_guard<std::mutex> lock(prop_g_mutex);
     assert(_propHandle != 0);
     OfxStatus stat = gPropSuite->propSetInt(_propHandle, property, idx, value);
     OFX::Log::error(stat != kOfxStatOK, "Failed on setting int property %s[%d] to %d, host returned status %s (%d);",
@@ -166,6 +174,7 @@ namespace OFX {
   /** @brief, Set a multiple dimension double property */
   void PropertySet::propSetDoubleN(const char* property, const double* values, int count, bool throwOnFailure)
   {
+    std::lock_guard<std::mutex> lock(prop_g_mutex);
     assert(_propHandle != 0);
     OfxStatus stat = gPropSuite->propSetDoubleN(_propHandle, property, count, values);
     OFX::Log::error(stat != kOfxStatOK, "Failed on setting double property %s[0..%d], host returned status %s;",
@@ -179,6 +188,7 @@ namespace OFX {
   /** @brief Get single pointer property */
   void*  PropertySet::propGetPointer(const char* property, int idx, bool throwOnFailure) const
   {
+    std::lock_guard<std::mutex> lock(prop_g_mutex);
     assert(_propHandle != 0);
     void *value = 0;
     OfxStatus stat = gPropSuite->propGetPointer(_propHandle, property, idx, &value);
@@ -192,14 +202,17 @@ namespace OFX {
     return value;
   }
 
+
   /** @brief Get single string property */
   std::string PropertySet::propGetString(const char* property, int idx, bool throwOnFailure) const
   {
 
+    std::lock_guard<std::mutex> lock(prop_g_mutex);
+
     if(_gPropLogging > 0) OFX::Log::print("PropertySet::propGetString  %s property[%d] %s", property, idx, _propHandle != 0? "NOT NULL" : "NULL");
 
     assert(_propHandle != 0);
-    char *value = NULL;
+    char *value;
 
     if(_gPropLogging > 0) OFX::Log::print("PropertySet::propGetString  %s property[%d] %s, OK", property, idx);
 
@@ -221,6 +234,7 @@ namespace OFX {
   /** @brief Get single double property */
   double PropertySet::propGetDouble(const char* property, int idx, bool throwOnFailure) const
   {
+    std::lock_guard<std::mutex> lock(prop_g_mutex);
     assert(_propHandle != 0);
     double value = 0;
     OfxStatus stat = gPropSuite->propGetDouble(_propHandle, property, idx, &value);
@@ -236,6 +250,7 @@ namespace OFX {
   /** @brief Get single int property */
   int PropertySet::propGetInt(const char* property, int idx, bool throwOnFailure) const
   {
+    std::lock_guard<std::mutex> lock(prop_g_mutex);
     assert(_propHandle != 0);
     int value = 0;
     OfxStatus stat = gPropSuite->propGetInt(_propHandle, property, idx, &value);
@@ -250,6 +265,7 @@ namespace OFX {
 
   std::list<std::string> PropertySet::propGetNString(const char* property, bool throwOnFailure) const
   {
+    std::lock_guard<std::mutex> lock(prop_g_mutex);
     assert(_propHandle != 0);
     std::list<std::string> ret;
     int dimension = propGetDimension(property,throwOnFailure);
