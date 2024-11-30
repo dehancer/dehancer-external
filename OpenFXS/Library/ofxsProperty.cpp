@@ -204,7 +204,7 @@ namespace OFX {
     if(_gPropLogging > 0) OFX::Log::print("PropertySet::propGetString  %s property[%d] %s, OK", property, idx);
 
     OfxStatus stat = gPropSuite->propGetString(_propHandle, property, idx, &value);
-    
+
     OFX::Log::error(stat != kOfxStatOK, "Failed on getting string property %s[%d], host returned status %s;",
       property, idx, mapStatusToString(stat));
 

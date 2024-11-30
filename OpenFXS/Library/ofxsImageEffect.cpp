@@ -98,7 +98,7 @@ namespace OFX {
 
   /** @brief the global host description */
   ImageEffectHostDescription gHostDescription;
-  bool gHostDescriptionHasInit = false;
+  std::atomic_bool gHostDescriptionHasInit = false;
 
   bool ImageEffectHostDescription::supportsPixelComponent(const PixelComponentEnum component) const
   {
@@ -1950,12 +1950,12 @@ namespace OFX {
     }
 
     /** @brief Keeps count of how many times load/unload have been called */
-    int gLoadCount = 0;
+    std::atomic_int gLoadCount = 0;
 
     /** @brief Library side load action, this fetches all the suite pointers */
     void loadAction(void)
     {
-      gLoadCount++;
+      ++gLoadCount;
 
       //OfxStatus status = kOfxStatOK;
 
