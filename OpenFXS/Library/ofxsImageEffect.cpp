@@ -496,8 +496,8 @@ namespace OFX {
     std::map<std::string, ClipDescriptor *>::iterator iter;
     for(iter = _definedClips.begin(); iter != _definedClips.end(); ++iter) {
       if(iter->second) {
-        delete iter->second;
-        iter->second = NULL;
+        // delete iter->second;
+        // iter->second = NULL;
       }
     }
   }
@@ -1265,7 +1265,7 @@ namespace OFX {
     std::map<std::string, Clip *>::iterator iter;
     for(iter = _fetchedClips.begin(); iter != _fetchedClips.end(); ++iter) {
       if(iter->second) {
-        delete iter->second;
+        // delete iter->second;
         iter->second = NULL;
       }
     }
@@ -2038,7 +2038,7 @@ namespace OFX {
         for(EffectContextMap::iterator it2 = toBeDeleted.begin(); it2 != toBeDeleted.end(); ++it2)
         {
           OFX::ImageEffectDescriptor* desc = it2->second;
-          delete desc;
+          // delete desc;
         }
         toBeDeleted.clear();
       }
@@ -2049,7 +2049,7 @@ namespace OFX {
         if (it2 != ofxPlugs.end()) {
           (*it2) = 0;
         }
-        delete plug;
+        // delete plug;
       }
     }
 
@@ -2702,7 +2702,7 @@ namespace OFX {
           ImageEffect *instance = retrieveImageEffectPointer(handle);
 
           // kill it
-          delete instance;
+          // delete instance;
 
           // got here, must be good
           stat = kOfxStatOK;
