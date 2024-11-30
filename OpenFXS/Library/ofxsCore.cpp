@@ -72,7 +72,7 @@ namespace OFX {
           std::cout << strs[i] << std::endl;
           OFX::Log::print(strs[i]);
       }
-      free(strs);
+      // free(strs);
 #     endif
 #    endif
       throw OFX::Exception::Suite(stat);
