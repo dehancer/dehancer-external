@@ -1841,11 +1841,14 @@ namespace OFX {
   /** @brief OFX::Private namespace, for things private to the support library code here generally calls image effect class members */
   namespace Private {
 
+    static std::recursive_mutex mutex;
     /** @brief Creates the global host description and sets its properties */
     static
     void
       fetchHostDescription(OfxHost *host)
     {
+      std::lock_guard<std::recursive_mutex> lock(mutex);
+
       OFX::Log::error(OFX::gHostDescriptionHasInit, "Tried to create host description when we already have one.");
       if(!OFX::gHostDescriptionHasInit) {
         OFX::gHostDescriptionHasInit = true;
