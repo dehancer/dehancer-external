@@ -195,11 +195,16 @@ namespace OFX {
   /** @brief Get single string property */
   std::string PropertySet::propGetString(const char* property, int idx, bool throwOnFailure) const
   {
+
+    if(_gPropLogging > 0) OFX::Log::print("PropertySet::propGetString int property %p", _propHandle == nullptr? "NULL" : _propHandle);
+
     assert(_propHandle != 0);
     char *value = NULL;
+
     OfxStatus stat = gPropSuite->propGetString(_propHandle, property, idx, &value);
     OFX::Log::error(stat != kOfxStatOK, "Failed on getting string property %s[%d], host returned status %s;",
       property, idx, mapStatusToString(stat));
+
     if(throwOnFailure)
       throwPropertyException(stat, property);
 
