@@ -496,8 +496,8 @@ namespace OFX {
     std::map<std::string, ClipDescriptor *>::iterator iter;
     for(iter = _definedClips.begin(); iter != _definedClips.end(); ++iter) {
       if(iter->second) {
-        // delete iter->second;
-        // iter->second = NULL;
+        delete iter->second;
+        iter->second = NULL;
       }
     }
   }
@@ -1265,7 +1265,7 @@ namespace OFX {
     std::map<std::string, Clip *>::iterator iter;
     for(iter = _fetchedClips.begin(); iter != _fetchedClips.end(); ++iter) {
       if(iter->second) {
-        // delete iter->second;
+        delete iter->second;
         iter->second = NULL;
       }
     }
@@ -1851,6 +1851,7 @@ namespace OFX {
 
       OFX::Log::error(OFX::gHostDescriptionHasInit, "Tried to create host description when we already have one.");
       if(!OFX::gHostDescriptionHasInit) {
+
         OFX::gHostDescriptionHasInit = true;
         // wrap the property handle up with a property set
         PropertySet hostProps(host->host);
@@ -1862,35 +1863,35 @@ namespace OFX {
           gHostDescription.APIVersionMajor = 1;
         }
         gHostDescription.APIVersionMinor            = hostProps.propGetInt(kOfxPropAPIVersion, 1, false); // OFX 1.2
-        gHostDescription.hostName                   = "DaVinciResolve"; //hostProps.propGetString(kOfxPropName);
-        gHostDescription.hostLabel                  = "DaVinci Resolve"; //hostProps.propGetString(kOfxPropLabel);
+        gHostDescription.hostName                   = hostProps.propGetString(kOfxPropName);
+        gHostDescription.hostLabel                  = hostProps.propGetString(kOfxPropLabel);
         gHostDescription.versionMajor               = hostProps.propGetInt(kOfxPropVersion, 0, false); // OFX 1.2
         gHostDescription.versionMinor               = hostProps.propGetInt(kOfxPropVersion, 1, false); // OFX 1.2
         gHostDescription.versionMicro               = hostProps.propGetInt(kOfxPropVersion, 2, false); // OFX 1.2
-        gHostDescription.versionLabel               = "19", //hostProps.propGetString(kOfxPropVersionLabel, false); // OFX 1.2
-        gHostDescription.hostIsBackground           = hostProps.propGetInt(kOfxImageEffectHostPropIsBackground,false) != 0;
-        gHostDescription.supportsOverlays           = hostProps.propGetInt(kOfxImageEffectPropSupportsOverlays,false) != 0;
-        gHostDescription.supportsMultiResolution    = hostProps.propGetInt(kOfxImageEffectPropSupportsMultiResolution,false) != 0;
-        gHostDescription.supportsTiles              = hostProps.propGetInt(kOfxImageEffectPropSupportsTiles,false) != 0;
-        gHostDescription.temporalClipAccess         = hostProps.propGetInt(kOfxImageEffectPropTemporalClipAccess,false) != 0;
-        gHostDescription.supportsMultipleClipDepths = hostProps.propGetInt(kOfxImageEffectPropSupportsMultipleClipDepths,false) != 0;
-        gHostDescription.supportsMultipleClipPARs   = hostProps.propGetInt(kOfxImageEffectPropSupportsMultipleClipPARs,false) != 0;
-        gHostDescription.supportsSetableFrameRate   = hostProps.propGetInt(kOfxImageEffectPropSetableFrameRate,false) != 0;
-        gHostDescription.supportsSetableFielding    = hostProps.propGetInt(kOfxImageEffectPropSetableFielding,false) != 0;
+        gHostDescription.versionLabel               = hostProps.propGetString(kOfxPropVersionLabel, false); // OFX 1.2
+        gHostDescription.hostIsBackground           = hostProps.propGetInt(kOfxImageEffectHostPropIsBackground) != 0;
+        gHostDescription.supportsOverlays           = hostProps.propGetInt(kOfxImageEffectPropSupportsOverlays) != 0;
+        gHostDescription.supportsMultiResolution    = hostProps.propGetInt(kOfxImageEffectPropSupportsMultiResolution) != 0;
+        gHostDescription.supportsTiles              = hostProps.propGetInt(kOfxImageEffectPropSupportsTiles) != 0;
+        gHostDescription.temporalClipAccess         = hostProps.propGetInt(kOfxImageEffectPropTemporalClipAccess) != 0;
+        gHostDescription.supportsMultipleClipDepths = hostProps.propGetInt(kOfxImageEffectPropSupportsMultipleClipDepths) != 0;
+        gHostDescription.supportsMultipleClipPARs   = hostProps.propGetInt(kOfxImageEffectPropSupportsMultipleClipPARs) != 0;
+        gHostDescription.supportsSetableFrameRate   = hostProps.propGetInt(kOfxImageEffectPropSetableFrameRate) != 0;
+        gHostDescription.supportsSetableFielding    = hostProps.propGetInt(kOfxImageEffectPropSetableFielding) != 0;
         gHostDescription.sequentialRender           = hostProps.propGetInt(kOfxImageEffectInstancePropSequentialRender, false); // appeared in OFX 1.2
-        gHostDescription.supportsStringAnimation    = hostProps.propGetInt(kOfxParamHostPropSupportsStringAnimation,false) != 0;
-        gHostDescription.supportsCustomInteract     = hostProps.propGetInt(kOfxParamHostPropSupportsCustomInteract,false) != 0;
-        gHostDescription.supportsChoiceAnimation    = hostProps.propGetInt(kOfxParamHostPropSupportsChoiceAnimation,false) != 0;
-        gHostDescription.supportsStrChoiceAnimation = hostProps.propGetInt(kOfxParamHostPropSupportsStrChoiceAnimation, false) != 0;
-        gHostDescription.supportsBooleanAnimation   = hostProps.propGetInt(kOfxParamHostPropSupportsBooleanAnimation,false) != 0;
-        gHostDescription.supportsCustomAnimation    = hostProps.propGetInt(kOfxParamHostPropSupportsCustomAnimation,false) != 0;
-        gHostDescription.osHandle                   = hostProps.propGetPointer(kOfxPropHostOSHandle, false);
+        gHostDescription.supportsStringAnimation    = hostProps.propGetInt(kOfxParamHostPropSupportsStringAnimation) != 0;
+        gHostDescription.supportsCustomInteract     = hostProps.propGetInt(kOfxParamHostPropSupportsCustomInteract) != 0;
+        gHostDescription.supportsChoiceAnimation    = hostProps.propGetInt(kOfxParamHostPropSupportsChoiceAnimation) != 0;
+        gHostDescription.supportsStrChoiceAnimation = hostProps.propGetInt(kOfxParamHostPropSupportsStrChoiceAnimation) != 0;
+        gHostDescription.supportsBooleanAnimation   = hostProps.propGetInt(kOfxParamHostPropSupportsBooleanAnimation) != 0;
+        gHostDescription.supportsCustomAnimation    = hostProps.propGetInt(kOfxParamHostPropSupportsCustomAnimation) != 0;
+        gHostDescription.osHandle                   = hostProps.propGetPointer(kOfxPropHostOSHandle,);
         gHostDescription.supportsParametricParameter = gParametricParameterSuite != 0;
         gHostDescription.supportsParametricAnimation = hostProps.propGetInt(kOfxParamHostPropSupportsParametricAnimation, false) != 0;
-        gHostDescription.supportsOpenCLRender        = "true";//hostProps.propGetString(kOfxImageEffectPropOpenCLRenderSupported, 0, false) == "true";
-        gHostDescription.supportsCudaRender          = "false";//hostProps.propGetString(kOfxImageEffectPropCudaRenderSupported, 0, false) == "true";
-        gHostDescription.supportsCudaStream          = "false";//hostProps.propGetString(kOfxImageEffectPropCudaStreamSupported, 0, false) == "true";
-        gHostDescription.supportsMetalRender         = "true";//hostProps.propGetString(kOfxImageEffectPropMetalRenderSupported, 0, false) == "true";
+        gHostDescription.supportsOpenCLRender        = hostProps.propGetString(kOfxImageEffectPropOpenCLRenderSupported, 0, false) == "true";
+        gHostDescription.supportsCudaRender          = hostProps.propGetString(kOfxImageEffectPropCudaRenderSupported, 0, false) == "true";
+        gHostDescription.supportsCudaStream          = hostProps.propGetString(kOfxImageEffectPropCudaStreamSupported, 0, false) == "true";
+        gHostDescription.supportsMetalRender         = hostProps.propGetString(kOfxImageEffectPropMetalRenderSupported, 0, false) == "true";
         gHostDescription.supportsRenderQualityDraft = hostProps.propGetInt(kOfxImageEffectPropRenderQualityDraft, false) != 0; // appeared in OFX 1.4
         {
             std::string originStr = hostProps.propGetString(kOfxImageEffectHostPropNativeOrigin, false); // appeared in OFX 1.4
@@ -1921,10 +1922,10 @@ namespace OFX {
 #ifdef OFX_SUPPORTS_OPENGLRENDER
         gHostDescription.supportsOpenGLRender = gOpenGLRenderSuite != 0 && hostProps.propGetString(kOfxImageEffectPropOpenGLRenderSupported, 0, false) == "true";
 #endif
-        gHostDescription.maxParameters              = hostProps.propGetInt(kOfxParamHostPropMaxParameters,false);
-        gHostDescription.maxPages                   = hostProps.propGetInt(kOfxParamHostPropMaxPages,false);
-        gHostDescription.pageRowCount               = hostProps.propGetInt(kOfxParamHostPropPageRowColumnCount, 0,false);
-        gHostDescription.pageColumnCount            = hostProps.propGetInt(kOfxParamHostPropPageRowColumnCount, 1,false);
+        gHostDescription.maxParameters              = hostProps.propGetInt(kOfxParamHostPropMaxParameters);
+        gHostDescription.maxPages                   = hostProps.propGetInt(kOfxParamHostPropMaxPages);
+        gHostDescription.pageRowCount               = hostProps.propGetInt(kOfxParamHostPropPageRowColumnCount, 0);
+        gHostDescription.pageColumnCount            = hostProps.propGetInt(kOfxParamHostPropPageRowColumnCount, 1);
 
         int numComponents = hostProps.propGetDimension(kOfxImageEffectPropSupportedComponents);
         for(int i=0; i<numComponents; ++i)
@@ -2043,7 +2044,7 @@ namespace OFX {
         for(EffectContextMap::iterator it2 = toBeDeleted.begin(); it2 != toBeDeleted.end(); ++it2)
         {
           OFX::ImageEffectDescriptor* desc = it2->second;
-          // delete desc;
+          delete desc;
         }
         toBeDeleted.clear();
       }
@@ -2054,7 +2055,7 @@ namespace OFX {
         if (it2 != ofxPlugs.end()) {
           (*it2) = 0;
         }
-        // delete plug;
+        delete plug;
       }
     }
 
@@ -2715,7 +2716,7 @@ namespace OFX {
           ImageEffect *instance = retrieveImageEffectPointer(handle);
 
           // kill it
-          // delete instance;
+          delete instance;
 
           // got here, must be good
           stat = kOfxStatOK;
