@@ -205,12 +205,13 @@ namespace OFX {
     OFX::Log::error(stat != kOfxStatOK, "Failed on getting string property %s[%d], host returned status %s;",
       property, idx, mapStatusToString(stat));
 
-    if(_gPropLogging > 0) OFX::Log::print("PropertySet::propGetString  %s value: %s", property, value != NULL ?  value : "NULL");
+    if(_gPropLogging > 0) OFX::Log::print("PropertySet::propGetString  %s value: %s, stat: %d", property, value != NULL ?  value : "NULL", stat);
 
     if(throwOnFailure)
       throwPropertyException(stat, property);
 
     if(_gPropLogging > 0) Log::print("Retrieved string property %s[%d], was given %s.",  property, idx, value);
+
     return value != NULL ?  std::string(value) : std::string();
   }
 
