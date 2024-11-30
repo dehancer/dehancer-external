@@ -1960,6 +1960,8 @@ namespace OFX {
     {
       ++gLoadCount;
 
+      OFX::Log::print("loadAction: %d\n", gLoadCount.load());
+
       //OfxStatus status = kOfxStatOK;
 
       // fetch the suites
@@ -2015,7 +2017,7 @@ namespace OFX {
       --gLoadCount;
 
       OFX::Log::print("unloadAction plugin gLoadCount = %d ", gLoadCount.load());
-      
+
       if (gLoadCount<0) {
         OFX::Log::warning(true, "OFX Plugin '%s' is already unloaded.", id);
         return;
@@ -2024,15 +2026,15 @@ namespace OFX {
       if(gLoadCount==0)
       {
         // force these to null
-        gEffectSuite = 0;
-        gPropSuite = 0;
-        gParamSuite = 0;
-        gMemorySuite = 0;
-        gThreadSuite = 0;
-        gMessageSuite = 0;
-        gMessageSuiteV2 = 0;
-        gInteractSuite = 0;
-        gParametricParameterSuite = 0;
+        // gEffectSuite = 0;
+        // gPropSuite = 0;
+        // gParamSuite = 0;
+        // gMemorySuite = 0;
+        // gThreadSuite = 0;
+        // gMessageSuite = 0;
+        // gMessageSuiteV2 = 0;
+        // gInteractSuite = 0;
+        // gParametricParameterSuite = 0;
       }
 
       {
