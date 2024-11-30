@@ -196,12 +196,15 @@ namespace OFX {
   std::string PropertySet::propGetString(const char* property, int idx, bool throwOnFailure) const
   {
 
-    if(_gPropLogging > 0) OFX::Log::print("PropertySet::propGetString  %s property %s", property, _propHandle == nullptr? "NULL" : "NOT NULL");
+    if(_gPropLogging > 0) OFX::Log::print("PropertySet::propGetString  %s property[%d] %s", property, idx, _propHandle != 0? "NOT NULL" : "NULL");
 
     assert(_propHandle != 0);
     char *value = NULL;
 
+    if(_gPropLogging > 0) OFX::Log::print("PropertySet::propGetString  %s property[%d] %s, OK", property, idx);
+
     OfxStatus stat = gPropSuite->propGetString(_propHandle, property, idx, &value);
+    
     OFX::Log::error(stat != kOfxStatOK, "Failed on getting string property %s[%d], host returned status %s;",
       property, idx, mapStatusToString(stat));
 
