@@ -2012,7 +2012,10 @@ namespace OFX {
     static
     void unloadAction(const char* id)
     {
-      gLoadCount--;
+      --gLoadCount;
+
+      OFX::Log::print("unloadAction plugin gLoadCount = %d ", gLoadCount.load());
+      
       if (gLoadCount<0) {
         OFX::Log::warning(true, "OFX Plugin '%s' is already unloaded.", id);
         return;
@@ -2593,8 +2596,10 @@ namespace OFX {
       try {
 
         OfxPlugInfoMap::iterator it = plugInfoMap.find(plugname);
-        if(it==plugInfoMap.end())
-          throw;
+        if(it==plugInfoMap.end()) {
+          OFX::Log::error(true, "Unknown plugin '%s'", plugname);
+          return kOfxStatErrUnknown;
+        }
 
         OFX::PluginFactory* factory = it->second._factory;
 
@@ -2611,9 +2616,15 @@ namespace OFX {
         // figure the actions
         if (action == kOfxActionLoad) {
           // call the support load function, param-less
+
+          OFX::Log::print("kOfxActionLoad plugin '%s'", plugname);
+
           OFX::Private::loadAction();
 
           // call the plugin side load action, param-less
+
+          OFX::Log::print("Call the plugin side load action, param-less '%s'", plugname);
+
           factory->load();
 
           // got here, must be good
