@@ -196,7 +196,7 @@ namespace OFX {
   std::string PropertySet::propGetString(const char* property, int idx, bool throwOnFailure) const
   {
 
-    if(_gPropLogging > 0) OFX::Log::print("PropertySet::propGetString int property %p", _propHandle == nullptr? "NULL" : _propHandle);
+    if(_gPropLogging > 0) OFX::Log::print("PropertySet::propGetString int property %s", _propHandle == nullptr? "NULL" : "NOT NULL");
 
     assert(_propHandle != 0);
     char *value = NULL;
