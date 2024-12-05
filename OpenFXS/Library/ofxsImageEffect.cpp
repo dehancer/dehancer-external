@@ -1967,7 +1967,7 @@ namespace OFX {
           OFX::Log::error(gHost == 0, "Host pointer has not been set.");
           if(!gHost) throw OFX::Exception::Suite(kOfxStatErrBadHandle);
           
-          if(gLoadCount == 1) {
+          if(gLoadCount == 1 || gEffectSuite == 0) {
             gEffectSuite    = (OfxImageEffectSuiteV1 *) fetchSuite(kOfxImageEffectSuite, 1);
             gPropSuite      = (OfxPropertySuiteV1 *)    fetchSuite(kOfxPropertySuite, 1);
             gParamSuite     = (OfxParameterSuiteV1 *)   fetchSuite(kOfxParameterSuite, 1);
@@ -2019,15 +2019,15 @@ namespace OFX {
           if(gLoadCount==0)
           {
             // force these to null
-            gEffectSuite = 0;
-            gPropSuite = 0;
-            gParamSuite = 0;
-            gMemorySuite = 0;
-            gThreadSuite = 0;
-            gMessageSuite = 0;
-            gMessageSuiteV2 = 0;
-            gInteractSuite = 0;
-            gParametricParameterSuite = 0;
+//            gEffectSuite = 0;
+//            gPropSuite = 0;
+//            gParamSuite = 0;
+//            gMemorySuite = 0;
+//            gThreadSuite = 0;
+//            gMessageSuite = 0;
+//            gMessageSuiteV2 = 0;
+//            gInteractSuite = 0;
+//            gParametricParameterSuite = 0;
           }
           
           {
