@@ -35,6 +35,7 @@ England
 */
 
 #include "ofxsSupportPrivate.h"
+#include <mutex>
 
 using namespace OFX::Private;
 
@@ -209,24 +210,24 @@ namespace OFX {
 
     std::lock_guard<std::mutex> lock(prop_g_mutex);
 
-    if(_gPropLogging > 0) OFX::Log::print("PropertySet::propGetString  %s property[%d] %s", property, idx, _propHandle != 0? "NOT NULL" : "NULL");
+//    if(_gPropLogging > 0) OFX::Log::print("PropertySet::propGetString  %s property[%d] %s", property, idx, _propHandle != 0? "NOT NULL" : "NULL");
 
     assert(_propHandle != 0);
     char *value;
 
-    if(_gPropLogging > 0) OFX::Log::print("PropertySet::propGetString  %s property[%d] %s, OK", property, idx);
+//    if(_gPropLogging > 0) OFX::Log::print("PropertySet::propGetString  %s property[%d] %s, OK", property, idx);
 
     OfxStatus stat = gPropSuite->propGetString(_propHandle, property, idx, &value);
 
     OFX::Log::error(stat != kOfxStatOK, "Failed on getting string property %s[%d], host returned status %s;",
       property, idx, mapStatusToString(stat));
 
-    if(_gPropLogging > 0) OFX::Log::print("PropertySet::propGetString  %s value: %s, stat: %d", property, value != NULL ?  value : "NULL", stat);
+//    if(_gPropLogging > 0) OFX::Log::print("PropertySet::propGetString  %s value: %s, stat: %d", property, value != NULL ?  value : "NULL", stat);
 
     if(throwOnFailure)
       throwPropertyException(stat, property);
 
-    if(_gPropLogging > 0) Log::print("Retrieved string property %s[%d], was given %s.",  property, idx, value);
+//    if(_gPropLogging > 0) Log::print("Retrieved string property %s[%d], was given %s.",  property, idx, value);
 
     return value != NULL ?  std::string(value) : std::string();
   }

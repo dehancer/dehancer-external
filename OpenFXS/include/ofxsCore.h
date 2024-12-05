@@ -364,7 +364,6 @@ namespace OFX {
 
     /// get a string property with index 0
     std::string propGetString(const char *property, bool throwOnFailure = true) const {
-      if(_gPropLogging > 0) OFX::Log::print("propGetString property %s", property);
       return propGetString(property, 0, throwOnFailure);
     }
 
