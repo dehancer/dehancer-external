@@ -1873,10 +1873,11 @@ namespace OFX {
             
             gHostDescription.APIVersionMinor            = hostProps.propGetInt(kOfxPropAPIVersion, 1, false); // OFX 1.2
 
-            std::string nodetype = hostProps.propGetString("uk.ltd.filmlight.nodetype", false);
+            gHostDescription.nodeType = hostProps.propGetString("uk.ltd.filmlight.nodetype", false);
+            gHostDescription.supportedColorSpaces = hostProps.propGetNString("uk.ltd.filmlight.OfxImageEffectPropSupportedColourSpaces", false);
 
             gHostDescription.hostName                   = hostProps.propGetString(kOfxPropName, true);
-            OFX::Log::print("Host name %s, Node type %s", gHostDescription.hostName.c_str(), nodetype.c_str());
+            OFX::Log::print("Host name %s, Node type %s", gHostDescription.hostName.c_str(), gHostDescription.nodeType.c_str());
             gHostDescription.hostLabel                  = hostProps.propGetString(kOfxPropLabel, true);
             gHostDescription.versionMajor               = hostProps.propGetInt(kOfxPropVersion, 0, false); // OFX 1.2
             gHostDescription.versionMinor               = hostProps.propGetInt(kOfxPropVersion, 1, false); // OFX 1.2
@@ -1974,7 +1975,6 @@ namespace OFX {
         void loadAction(void)
         {
           gLoadCount++;
-          OFX::Log::print("Load action, count %d", gLoadCount);
           //OfxStatus status = kOfxStatOK;
           
           // fetch the suites
@@ -2026,7 +2026,6 @@ namespace OFX {
         void unloadAction(const char* id)
         {
           gLoadCount--;
-          OFX::Log::print("Unload action, count %d", gLoadCount);
           if (gLoadCount<0) {
             OFX::Log::warning(true, "OFX Plugin '%s' is already unloaded.", id);
             return;

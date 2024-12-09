@@ -259,6 +259,7 @@ namespace OFX {
         int APIVersionMinor;
         std::string hostName;
         std::string hostLabel;
+        std::string nodeType;
         int versionMajor;
         int versionMinor;
         int versionMicro;
@@ -304,6 +305,7 @@ namespace OFX {
         bool supportsProgressSuite;
         bool supportsTimeLineSuite;
         bool supportsMessageSuiteV2;
+        std::list<std::string> supportedColorSpaces;
 
     public:
         bool supportsPixelComponent(const PixelComponentEnum component) const;
