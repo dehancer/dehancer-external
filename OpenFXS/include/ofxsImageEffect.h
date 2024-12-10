@@ -376,6 +376,8 @@ namespace OFX {
 
         /** @brief say whether this clip is a 'mask', so the host can know to replace with a roto or similar, defaults to false */
         void setIsMask(bool v);
+
+        void setSupportedColorSpaces(const std::list<std::string>& spaces);
     };
 
     ////////////////////////////////////////////////////////////////////////////////

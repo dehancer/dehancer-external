@@ -464,6 +464,14 @@ namespace OFX {
     {
       _clipProps.propSetInt(kOfxImageClipPropIsMask, int(v));
     }
+
+  void ClipDescriptor::setSupportedColorSpaces(const std::list<std::string>& spaces) {
+      int i = 0;
+      for (const auto& space : spaces) {
+        _clipProps.propSetString("uk.ltd.filmlight.OfxImageEffectPropSupportedColourSpaces", space, i);
+        ++i;
+      }
+    }
     
     ////////////////////////////////////////////////////////////////////////////////
     // image effect descriptor
@@ -2146,7 +2154,8 @@ namespace OFX {
 
           args.isEnabledMetalRender  = inArgs.propGetInt(kOfxImageEffectPropMetalEnabled, false) != 0;
           args.pMetalCmdQ            = inArgs.propGetPointer(kOfxImageEffectPropMetalCommandQueue, false);
-          OFX::Log::print("Render, metalQueue %p", args.pMetalCmdQ);
+          std::string colorSpace     = inArgs.propGetString("uk.ltd.filmlight.OfxImageEffectPropColourSpace", false);
+          OFX::Log::print("Render, color space %s", colorSpace.c_str());
 #ifdef OFX_SUPPORTS_OPENGLRENDER
           // Don't throw an exception if the following inArgs are not present.
           // OpenGL rendering appeared in OFX 1.3
