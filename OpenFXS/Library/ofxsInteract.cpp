@@ -526,9 +526,9 @@ namespace OFX {
       OfxPropertySetHandle    outArgsRaw,
       InteractDescriptor& desc)
     {
-      OFX::Log::print("********************************************************************************");
-      OFX::Log::print("START overlayInteractMainEntry (%s)", actionRaw);
-      OFX::Log::indent();
+      // OFX::Log::print("********************************************************************************");
+      // OFX::Log::print("START overlayInteractMainEntry (%s)", actionRaw);
+      // OFX::Log::indent();
       OfxStatus stat = kOfxStatReplyDefault;
 
       try {
@@ -570,8 +570,8 @@ namespace OFX {
         stat = kOfxStatFailed;
       }
 
-      OFX::Log::outdent();
-      OFX::Log::print("STOP overlayInteractMainEntry (%s)", actionRaw);
+      // OFX::Log::outdent();
+      // OFX::Log::print("STOP overlayInteractMainEntry (%s)", actionRaw);
       return stat;
     }
 
