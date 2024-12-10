@@ -2154,8 +2154,6 @@ namespace OFX {
 
           args.isEnabledMetalRender  = inArgs.propGetInt(kOfxImageEffectPropMetalEnabled, false) != 0;
           args.pMetalCmdQ            = inArgs.propGetPointer(kOfxImageEffectPropMetalCommandQueue, false);
-          std::string colorSpace     = inArgs.propGetString("uk.ltd.filmlight.OfxImageEffectPropColourSpace", false);
-          OFX::Log::print("Render, color space %s", colorSpace.c_str());
 #ifdef OFX_SUPPORTS_OPENGLRENDER
           // Don't throw an exception if the following inArgs are not present.
           // OpenGL rendering appeared in OFX 1.3

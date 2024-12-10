@@ -701,6 +701,8 @@ namespace OFX {
         /** @brief get the string representing the pixel components */
         std::string getPixelComponentsProperty(void) const { return _clipProps.propGetString(kOfxImageEffectPropComponents);}
 
+        std::string getColorSpaceProperty(void) const { return _clipProps.propGetString("uk.ltd.filmlight.OfxImageEffectPropColourSpace", false);}
+
         /** @brief what is the actual pixel depth of the clip */
         BitDepthEnum getUnmappedPixelDepth(void) const;
 
