@@ -4,7 +4,7 @@ set(CURRENT_TARGET_NAME dehancer_external)
 #
 # Project
 #
-project(${CURRENT_TARGET_NAME} VERSION 1.4.1 LANGUAGES CXX C)
+project(${CURRENT_TARGET_NAME} VERSION 1.5.0 LANGUAGES CXX C)
 option(PRINT_DEBUG OFF)
 
 #
