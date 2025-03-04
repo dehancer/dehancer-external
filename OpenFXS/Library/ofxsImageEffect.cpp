@@ -1886,6 +1886,11 @@ namespace OFX {
 
             gHostDescription.hostName                   = hostProps.propGetString(kOfxPropName, true);
             OFX::Log::print("Host name %s, Node type %s", gHostDescription.hostName.c_str(), gHostDescription.nodeType.c_str());
+
+            std::string colorManagementStyle = hostProps.propGetString("OfxImageEffectPropColourManagementStyle", false);
+            OFX::Log::print("Colour management style %s", colorManagementStyle.c_str(), gHostDescription.nodeType.c_str());
+
+
             gHostDescription.hostLabel                  = hostProps.propGetString(kOfxPropLabel, true);
             gHostDescription.versionMajor               = hostProps.propGetInt(kOfxPropVersion, 0, false); // OFX 1.2
             gHostDescription.versionMinor               = hostProps.propGetInt(kOfxPropVersion, 1, false); // OFX 1.2
