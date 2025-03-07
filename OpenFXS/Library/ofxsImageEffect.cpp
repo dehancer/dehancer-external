@@ -1763,7 +1763,18 @@ namespace OFX {
       doneSomething_ = true;
       outArgs_.propSetDouble(kOfxImageEffectPropFrameRate, v);
     }
-    
+
+  /** @brief Allows an effect to change the preferred color spaces */
+  void ClipPreferencesSetter::setPreferredColourSpaces(std::list<std::string> spaces)
+    {
+      doneSomething_ = true;
+      int index = 0;
+      for(const auto& s : spaces) {
+        outArgs_.propSetString("OfxImageClipPropPreferredColourspaces", s, index++, false);
+      }
+
+    }
+
     /** @brief Set the premultiplication state of the output clip. */
     void ClipPreferencesSetter::setOutputPremultiplication(PreMultiplicationEnum v)
     {

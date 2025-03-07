@@ -703,6 +703,8 @@ namespace OFX {
 
         std::string getColorSpaceProperty(void) const { return _clipProps.propGetString("uk.ltd.filmlight.OfxImageEffectPropColourSpace", false);}
 
+        std::string getOFXColorSpaceProperty(void) const { return _clipProps.propGetString("OfxImageClipPropColourspace", false);}
+
         /** @brief what is the actual pixel depth of the clip */
         BitDepthEnum getUnmappedPixelDepth(void) const;
 
@@ -960,6 +962,8 @@ namespace OFX {
         Default is controlled by the host, typically the framerate of the input clips.
         */
         void setOutputFrameRate(double v);
+
+        void setPreferredColourSpaces(std::list<std::string> spaces);
 
         /** @brief Set the premultiplication state of the output clip.
 
