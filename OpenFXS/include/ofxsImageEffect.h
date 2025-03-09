@@ -487,6 +487,8 @@ namespace OFX {
         /** @brief Baselight: Set support for GetVRAMRequirementsSupported */
         void setGetVRAMRequirementsSupported(bool v);
 
+        void setOFXColorManagementStyle(const std::string& style);
+
 #ifdef OFX_SUPPORTS_OPENGLRENDER
         /** @brief Does the plugin support OpenGL accelerated rendering (but is also capable of CPU rendering) ? */
     void setSupportsOpenGLRender(bool v);

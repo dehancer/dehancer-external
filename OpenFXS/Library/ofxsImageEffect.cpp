@@ -744,6 +744,10 @@ namespace OFX {
       _effectProps.propSetInt("uk.ltd.filmlight.GetVRAMRequirementsSupported", v ? 1 : 0);
     }
 
+  void ImageEffectDescriptor::setOFXColorManagementStyle(const std::string& style) {
+      _effectProps.propSetString("OfxImageEffectPropColourManagementStyle", style);
+    }
+
 #ifdef OFX_SUPPORTS_OPENGLRENDER
     /** @brief Does the plugin support OpenGL accelerated rendering (but is also capable of CPU rendering) ? */
   void ImageEffectDescriptor::setSupportsOpenGLRender(bool v) {
