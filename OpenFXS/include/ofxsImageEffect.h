@@ -305,6 +305,7 @@ namespace OFX {
         bool supportsProgressSuite;
         bool supportsTimeLineSuite;
         bool supportsMessageSuiteV2;
+        bool ofxColorManagement;
         std::list<std::string> supportedColorSpaces;
 
     public:

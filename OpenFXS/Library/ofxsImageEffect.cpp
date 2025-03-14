@@ -1897,14 +1897,24 @@ namespace OFX {
             gHostDescription.APIVersionMinor            = hostProps.propGetInt(kOfxPropAPIVersion, 1, false); // OFX 1.2
 
             gHostDescription.nodeType = hostProps.propGetString("uk.ltd.filmlight.nodetype", false);
-            gHostDescription.supportedColorSpaces = hostProps.propGetNString("uk.ltd.filmlight.OfxImageEffectPropSupportedColourSpaces", false);
+
 
             gHostDescription.hostName                   = hostProps.propGetString(kOfxPropName, true);
             OFX::Log::print("Host name %s, Node type %s", gHostDescription.hostName.c_str(), gHostDescription.nodeType.c_str());
 
             std::string colorManagementStyle = hostProps.propGetString("OfxImageEffectPropColourManagementStyle", false);
+            if (colorManagementStyle.empty()) {
+              gHostDescription.ofxColorManagement = false;
+            }
+            else {
+              gHostDescription.ofxColorManagement = true;
+            }
             OFX::Log::print("Colour management style %s", colorManagementStyle.c_str(), gHostDescription.nodeType.c_str());
 
+            if (!gHostDescription.ofxColorManagement) {
+              // old way, get supported spaces
+              gHostDescription.supportedColorSpaces = hostProps.propGetNString("uk.ltd.filmlight.OfxImageEffectPropSupportedColourSpaces", false);
+            }
 
             gHostDescription.hostLabel                  = hostProps.propGetString(kOfxPropLabel, true);
             gHostDescription.versionMajor               = hostProps.propGetInt(kOfxPropVersion, 0, false); // OFX 1.2
@@ -2885,6 +2895,11 @@ namespace OFX {
                 instance->setAllocatedVRAM(metalDevice, setVRAM);
               }
             }
+            else if (action == "OfxImageEffectActionGetOutputColourspace") {
+              // don't need it yet, tell host to use the one from the list from the clip
+              stat = kOfxStatReplyDefault;
+            }
+
 #ifdef OFX_SUPPORTS_OPENGLRENDER
               else if(action == kOfxActionOpenGLContextAttached) {
           checkMainHandles(actionRaw, handleRaw, inArgsRaw, outArgsRaw, false, true, true);
