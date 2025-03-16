@@ -1774,6 +1774,7 @@ namespace OFX {
       doneSomething_ = true;
       int index = 0;
       for(const auto& s : spaces) {
+        OFX::Log::print("Setting preferred space %s", s.c_str());
         outArgs_.propSetString("OfxImageClipPropPreferredColourspaces", s, index++, false);
       }
 
@@ -2820,8 +2821,11 @@ namespace OFX {
               checkMainHandles(actionRaw, handleRaw, inArgsRaw, outArgsRaw, false, true, false);
               
               // call the frames needed action, return OK if it does something
-              if(clipPreferencesAction(handle, outArgs, plugname))
+              OFX::Log::print("GetClipPreferences action called");
+              if(clipPreferencesAction(handle, outArgs, plugname)) {
+                OFX::Log::print("clipPreferencesAction action returned OK");
                 stat = kOfxStatOK;
+              }
             }
             else if(action == kOfxActionPurgeCaches) {
               checkMainHandles(actionRaw, handleRaw, inArgsRaw, outArgsRaw, false, true, true);
