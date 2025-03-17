@@ -1589,7 +1589,7 @@ namespace OFX {
 
     }
 
-    void ImageEffect::getOutputColorSpace(const std::list<std::string>& hostPreferredColorSpaces, const std::string& pluginColorSpace) {
+    void ImageEffect::getOutputColorSpace(const std::list<std::string>& hostPreferredColorSpaces, std::string& pluginColorSpace) {
       // override in the plugin
     }
     

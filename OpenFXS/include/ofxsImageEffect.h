@@ -1207,7 +1207,7 @@ namespace OFX {
         virtual void setAllocatedVRAM(const void * metalDevice, double allocatedVRAM);
 
         /** @brief Baselight kOfxImageEffectActionGetOutputColourspace action */
-        virtual void getOutputColorSpace(const std::list<std::string>& hostPreferredColorSpaces, const std::string& pluginColorSpace);
+        virtual void getOutputColorSpace(const std::list<std::string>& hostPreferredColorSpaces, std::string& pluginColorSpace);
 
         /** @brief called when a custom param needs to be interpolated */
         virtual std::string interpolateCustomParam(const InterpolateCustomArgs &args, const std::string &paramName);
