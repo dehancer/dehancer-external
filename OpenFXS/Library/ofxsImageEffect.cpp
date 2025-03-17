@@ -472,7 +472,17 @@ namespace OFX {
         ++i;
       }
     }
-    
+
+  void ClipDescriptor::setOFXSupportedColourSpaces(const std::list<std::string>& spaces)
+    {
+      int index = 0;
+      for(const auto& s : spaces) {
+        OFX::Log::print("Clip descriptor: setting preferred space %s", s.c_str());
+        _clipProps.propSetString("OfxImageClipPropPreferredColourspaces", s, index++, false);
+      }
+
+    }
+
     ////////////////////////////////////////////////////////////////////////////////
     // image effect descriptor
     
@@ -2893,7 +2903,7 @@ namespace OFX {
               instance->endEdit();
             }
             else if (action == "uk.ltd.filmlight.ActionSetAllocatedVRAM") {
-              checkMainHandles(actionRaw, handleRaw, inArgsRaw, outArgsRaw, true, true, true);
+              checkMainHandles(actionRaw, handleRaw, inArgsRaw, outArgsRaw, true, false, true);
 
               double setVRAM = inArgs.propGetDouble("uk.ltd.filmlight.AllocatedVRAM");
               void * metalDevice = inArgs.propGetPointer("uk.ltd.filmlight.MetalDevice");
@@ -2904,7 +2914,7 @@ namespace OFX {
               }
             }
             else if (action == "OfxImageEffectActionGetOutputColourspace") {
-              checkMainHandles(actionRaw, handleRaw, inArgsRaw, outArgsRaw, true, true, true);
+              checkMainHandles(actionRaw, handleRaw, inArgsRaw, outArgsRaw, true, false, false);
               auto hostSpaces = inArgs.propGetNString("OfxImageClipPropPreferredColourspaces", false);
               std::string pluginSpace;
               if (handle) {
