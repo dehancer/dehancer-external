@@ -1588,6 +1588,10 @@ namespace OFX {
     void ImageEffect::setAllocatedVRAM(const void * metalDevice, double allocatedVRAM) {
 
     }
+
+    void ImageEffect::getOutputColorSpace(const std::list<std::string>& hostPreferredColorSpaces, const std::string& pluginColorSpace) {
+      // override in the plugin
+    }
     
     /** @brief get the time domain */
     bool ImageEffect::getTimeDomain(OfxRangeD &/*range*/)
@@ -2900,8 +2904,16 @@ namespace OFX {
               }
             }
             else if (action == "OfxImageEffectActionGetOutputColourspace") {
-              // don't need it yet, tell host to use the one from the list from the clip
-              stat = kOfxStatReplyDefault;
+              checkMainHandles(actionRaw, handleRaw, inArgsRaw, outArgsRaw, true, true, true);
+              auto hostSpaces = inArgs.propGetNString("OfxImageClipPropPreferredColourspaces", false);
+              std::string pluginSpace;
+              if (handle) {
+                ImageEffect *instance = retrieveImageEffectPointer(handle);
+                instance->getOutputColorSpace(hostSpaces, pluginSpace);
+              }
+              OFX::Log::print("GetOutputColorspace action: set %s", pluginSpace.c_str());
+              outArgs.propSetString("OfxImageClipPropColourspace", pluginSpace, false);
+              stat = kOfxStatOK;
             }
 
 #ifdef OFX_SUPPORTS_OPENGLRENDER
