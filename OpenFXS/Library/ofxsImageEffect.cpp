@@ -1789,7 +1789,7 @@ namespace OFX {
       int index = 0;
       for(const auto& s : spaces) {
         OFX::Log::print("Setting preferred space %s", s.c_str());
-        outArgs_.propSetString("OfxImageClipPropPreferredColourspaces", s, index++, false);
+        outArgs_.propSetString("OfxImageClipPropPreferredColourspaces_Source", s, index++, false);
       }
 
     }
