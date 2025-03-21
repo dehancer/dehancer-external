@@ -379,8 +379,6 @@ namespace OFX {
         void setIsMask(bool v);
 
         void setSupportedColorSpaces(const std::list<std::string>& spaces);
-
-        void setOFXSupportedColourSpaces(const std::list<std::string>& spaces);
     };
 
     ////////////////////////////////////////////////////////////////////////////////

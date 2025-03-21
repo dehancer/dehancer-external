@@ -473,16 +473,6 @@ namespace OFX {
       }
     }
 
-  void ClipDescriptor::setOFXSupportedColourSpaces(const std::list<std::string>& spaces)
-    {
-      int index = 0;
-      for(const auto& s : spaces) {
-        OFX::Log::print("Clip descriptor: setting preferred space %s", s.c_str());
-        _clipProps.propSetString("OfxImageClipPropPreferredColourspaces", s, index++, false);
-      }
-
-    }
-
     ////////////////////////////////////////////////////////////////////////////////
     // image effect descriptor
     
@@ -755,7 +745,7 @@ namespace OFX {
     }
 
   void ImageEffectDescriptor::setOFXColorManagementStyle(const std::string& style) {
-      _effectProps.propSetString("OfxImageEffectPropColourManagementStyle", style);
+      _effectProps.propSetString(kOfxImageEffectPropColourManagementStyle, style);
     }
 
 #ifdef OFX_SUPPORTS_OPENGLRENDER
@@ -1789,7 +1779,7 @@ namespace OFX {
       int index = 0;
       for(const auto& s : spaces) {
         OFX::Log::print("Setting preferred space %s", s.c_str());
-        outArgs_.propSetString("OfxImageClipPropPreferredColourspaces_Source", s, index++, false);
+        outArgs_.propSetString(kOfxImageClipPropPreferredColourspaces "_Source", s, index++, false);
       }
 
     }
@@ -1917,7 +1907,7 @@ namespace OFX {
             gHostDescription.hostName                   = hostProps.propGetString(kOfxPropName, true);
             OFX::Log::print("Host name %s, Node type %s", gHostDescription.hostName.c_str(), gHostDescription.nodeType.c_str());
 
-            std::string colorManagementStyle = hostProps.propGetString("OfxImageEffectPropColourManagementStyle", false);
+            std::string colorManagementStyle = hostProps.propGetString(kOfxImageEffectPropColourManagementStyle, false);
             if (colorManagementStyle.empty()) {
               gHostDescription.ofxColorManagement = false;
             }
@@ -2913,16 +2903,16 @@ namespace OFX {
                 instance->setAllocatedVRAM(metalDevice, setVRAM);
               }
             }
-            else if (action == "OfxImageEffectActionGetOutputColourspace") {
+            else if (action == kOfxImageEffectActionGetOutputColourspace) {
               checkMainHandles(actionRaw, handleRaw, inArgsRaw, outArgsRaw, true, false, false);
-              auto hostSpaces = inArgs.propGetNString("OfxImageClipPropPreferredColourspaces", false);
+              auto hostSpaces = inArgs.propGetNString(kOfxImageClipPropPreferredColourspaces, false);
               std::string pluginSpace;
               if (handle) {
                 ImageEffect *instance = retrieveImageEffectPointer(handle);
                 instance->getOutputColorSpace(hostSpaces, pluginSpace);
               }
               OFX::Log::print("GetOutputColorspace action: set %s", pluginSpace.c_str());
-              outArgs.propSetString("OfxImageClipPropColourspace", pluginSpace, false);
+              outArgs.propSetString(kOfxImageClipPropColourspace, pluginSpace, false);
               stat = kOfxStatOK;
             }
 
