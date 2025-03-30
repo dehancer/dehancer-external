@@ -640,6 +640,8 @@ namespace OFX {
         /** @brief set the default value */
         void setDefault(const std::string& p_DefaultValue);
 
+        std::string getDefault() const;
+
         /** @brief append an option */
         void appendOption(const std::string& p_Enum, const std::string& p_Option);
 
