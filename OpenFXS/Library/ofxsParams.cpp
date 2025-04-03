@@ -826,12 +826,6 @@ namespace OFX {
       _paramProps.propSetString(kOfxParamPropDefault, p_DefaultValue);
   }
 
-  /** @brief set the default value */
-  std::string StrChoiceParamDescriptor::getDefault() const
-  {
-    return _paramProps.propGetString(kOfxParamPropDefault);
-  }
-
   /** @brief append an option */
   void StrChoiceParamDescriptor::appendOption(const std::string& p_Enum, const std::string& p_Option)
   {

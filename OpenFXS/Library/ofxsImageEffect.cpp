@@ -745,7 +745,7 @@ namespace OFX {
     }
 
   void ImageEffectDescriptor::setOFXColorManagementStyle(const std::string& style) {
-      _effectProps.propSetString(kOfxImageEffectPropColourManagementStyle, style);
+      _effectProps.propSetString(kOfxImageEffectPropColourManagementStyle, style, false);
     }
 
 #ifdef OFX_SUPPORTS_OPENGLRENDER
