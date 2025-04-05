@@ -2019,7 +2019,8 @@ namespace OFX {
         {
           gLoadCount++;
           //OfxStatus status = kOfxStatOK;
-          
+          OFX::Log::print( "Load action");
+
           // fetch the suites
           OFX::Log::error(gHost == 0, "Host pointer has not been set.");
           if(!gHost) throw OFX::Exception::Suite(kOfxStatErrBadHandle);
@@ -2045,7 +2046,10 @@ namespace OFX {
             
             // OK check and fetch host information
             fetchHostDescription(gHost);
-            
+//            if (OFX::gHostDescription.hostName != "Baselight") {
+//              throw OFX::Exception::Suite(kOfxStatErrUnsupported);
+//            }
+
             /// and set some dendent flags
             OFX::gHostDescription.supportsMessageSuiteV2 = gMessageSuiteV2 != NULL;
             OFX::gHostDescription.supportsProgressSuite = (gProgressSuiteV1 != NULL || gProgressSuiteV2 != NULL);
