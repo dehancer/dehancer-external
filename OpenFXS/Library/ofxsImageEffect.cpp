@@ -2046,9 +2046,6 @@ namespace OFX {
             
             // OK check and fetch host information
             fetchHostDescription(gHost);
-            if (OFX::gHostDescription.hostName != "Baselight") {
-              throw OFX::Exception::Suite(kOfxStatErrUnsupported);
-            }
 
             /// and set some dendent flags
             OFX::gHostDescription.supportsMessageSuiteV2 = gMessageSuiteV2 != NULL;
@@ -2947,7 +2944,6 @@ namespace OFX {
               OFX::Log::error(true, "Requested action was a null pointer.");
             }
           }
-            
             // catch suite exceptions
           catch (const OFX::Exception::Suite &ex)
           {
