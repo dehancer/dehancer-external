@@ -2046,9 +2046,9 @@ namespace OFX {
             
             // OK check and fetch host information
             fetchHostDescription(gHost);
-//            if (OFX::gHostDescription.hostName != "Baselight") {
-//              throw OFX::Exception::Suite(kOfxStatErrUnsupported);
-//            }
+            if (OFX::gHostDescription.hostName != "Baselight") {
+              throw OFX::Exception::Suite(kOfxStatErrUnsupported);
+            }
 
             /// and set some dendent flags
             OFX::gHostDescription.supportsMessageSuiteV2 = gMessageSuiteV2 != NULL;
