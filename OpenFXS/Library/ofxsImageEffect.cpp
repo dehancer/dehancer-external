@@ -1778,7 +1778,6 @@ namespace OFX {
       doneSomething_ = true;
       int index = 0;
       for(const auto& s : spaces) {
-        OFX::Log::print("Setting preferred space %s", s.c_str());
         outArgs_.propSetString(kOfxImageClipPropPreferredColourspaces "_Source", s, index++, false);
       }
 
@@ -2254,7 +2253,6 @@ namespace OFX {
           args.isEnabledMetalRender  = inArgs.propGetInt(kOfxImageEffectPropMetalEnabled, false) != 0;
           args.pOpenCLCmdQ           = inArgs.propGetPointer(kOfxImageEffectPropOpenCLCommandQueue, false);
           args.pMetalCmdQ            = inArgs.propGetPointer(kOfxImageEffectPropMetalCommandQueue, false);
-          OFX::Log::print("BeginSequenceRender, metalQueue %p", args.pMetalCmdQ);
           args.pCudaStream           = inArgs.propGetPointer(kOfxImageEffectPropCudaStream, false);
 
 #ifdef OFX_SUPPORTS_OPENGLRENDER
@@ -2289,7 +2287,6 @@ namespace OFX {
           args.isEnabledMetalRender  = inArgs.propGetInt(kOfxImageEffectPropMetalEnabled, false) != 0;
           args.pOpenCLCmdQ           = inArgs.propGetPointer(kOfxImageEffectPropOpenCLCommandQueue, false);
           args.pMetalCmdQ            = inArgs.propGetPointer(kOfxImageEffectPropMetalCommandQueue, false);
-          OFX::Log::print("EndSequenceRender, metalQueue %p", args.pMetalCmdQ);
           args.pCudaStream           = inArgs.propGetPointer(kOfxImageEffectPropCudaStream, false);
 
 #ifdef OFX_SUPPORTS_OPENGLRENDER
@@ -2826,9 +2823,7 @@ namespace OFX {
               checkMainHandles(actionRaw, handleRaw, inArgsRaw, outArgsRaw, false, true, false);
               
               // call the frames needed action, return OK if it does something
-              OFX::Log::print("GetClipPreferences action called");
               if(clipPreferencesAction(handle, outArgs, plugname)) {
-                OFX::Log::print("clipPreferencesAction action returned OK");
                 stat = kOfxStatOK;
               }
             }
@@ -2905,14 +2900,13 @@ namespace OFX {
               }
             }
             else if (action == kOfxImageEffectActionGetOutputColourspace) {
-              checkMainHandles(actionRaw, handleRaw, inArgsRaw, outArgsRaw, true, false, false);
+              checkMainHandles(actionRaw, handleRaw, inArgsRaw, outArgsRaw, false, false, false);
               auto hostSpaces = inArgs.propGetNString(kOfxImageClipPropPreferredColourspaces, false);
               std::string pluginSpace;
               if (handle) {
                 ImageEffect *instance = retrieveImageEffectPointer(handle);
                 instance->getOutputColorSpace(hostSpaces, pluginSpace);
               }
-              OFX::Log::print("GetOutputColorspace action: set %s", pluginSpace.c_str());
               outArgs.propSetString(kOfxImageClipPropColourspace, pluginSpace, false);
               stat = kOfxStatOK;
             }
