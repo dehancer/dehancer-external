@@ -824,6 +824,7 @@ namespace OFX {
         bool      sequentialRenderStatus;
         bool      interactiveRenderStatus;
         bool      renderQualityDraft;
+        bool      noSpatialAwareness;
     };
 
     /** @brief POD struct to pass rendering arguments into @ref OFX::ImageEffect::isIdentity */

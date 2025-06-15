@@ -2202,6 +2202,9 @@ namespace OFX {
           
           // kOfxImageEffectPropRenderQualityDraft appeared in OFX 1.4
           args.renderQualityDraft = inArgs.propGetInt(kOfxImageEffectPropRenderQualityDraft, false) != 0;
+
+          // in Baselight we support kOfxImageEffectPropNoSpatialAwareness
+          args.noSpatialAwareness = inArgs.propGetInt(kOfxImageEffectPropNoSpatialAwareness, false) != 0;
           
           args.fieldToRender = eFieldNone;
           std::string str = inArgs.propGetString(kOfxImageEffectPropFieldToRender);
