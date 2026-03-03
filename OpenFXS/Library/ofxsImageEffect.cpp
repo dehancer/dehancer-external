@@ -156,7 +156,6 @@ namespace OFX {
         OfxProgressSuiteV2    *gProgressSuiteV2 = 0;
         OfxTimeLineSuiteV1    *gTimeLineSuite = 0;
         OfxParametricParameterSuiteV1 *gParametricParameterSuite = 0;
-        OfxFilmLightSuiteV1   *gFilmLightSuiteV1 = 0;
 #ifdef OFX_SUPPORTS_OPENGLRENDER
         OfxImageEffectOpenGLRenderSuiteV1 *gOpenGLRenderSuite = 0;
 #endif
@@ -2026,7 +2025,7 @@ namespace OFX {
           OFX::Log::error(gHost == 0, "Host pointer has not been set.");
           if(!gHost) throw OFX::Exception::Suite(kOfxStatErrBadHandle);
           
-          if(gLoadCount == 1) {
+          if(gLoadCount == 1 || gEffectSuite == 0) {
             gEffectSuite    = (OfxImageEffectSuiteV1 *) fetchSuite(kOfxImageEffectSuite, 1);
             gPropSuite      = (OfxPropertySuiteV1 *)    fetchSuite(kOfxPropertySuite, 1);
             gParamSuite     = (OfxParameterSuiteV1 *)   fetchSuite(kOfxParameterSuite, 1);
@@ -2038,7 +2037,6 @@ namespace OFX {
             gProgressSuiteV1 = (OfxProgressSuiteV1 *)     fetchSuite(kOfxProgressSuite, 1, true);
             gProgressSuiteV2 = (OfxProgressSuiteV2 *)     fetchSuite(kOfxProgressSuite, 2, true);
             gTimeLineSuite   = (OfxTimeLineSuiteV1 *)     fetchSuite(kOfxTimeLineSuite, 1, true);
-            gFilmLightSuiteV1 = (OfxFilmLightSuiteV1 *)     fetchSuite(kOfxFilmLightSuite, 1, true);
             // Resolve doesn't support OfxParametricParameterSuiteV1, do not fetch to suppress warning
             //gParametricParameterSuite = (OfxParametricParameterSuiteV1*) fetchSuite(kOfxParametricParameterSuite, 1, true);
 #ifdef OFX_SUPPORTS_OPENGLRENDER
@@ -2078,17 +2076,15 @@ namespace OFX {
           
           if(gLoadCount==0)
           {
-            // force these to null
-            gEffectSuite = 0;
-            gPropSuite = 0;
-            gParamSuite = 0;
-            gMemorySuite = 0;
-            gThreadSuite = 0;
-            gMessageSuite = 0;
-            gMessageSuiteV2 = 0;
-            gInteractSuite = 0;
-            gParametricParameterSuite = 0;
-            gFilmLightSuiteV1 = 0;
+//            gEffectSuite = 0;
+//            gPropSuite = 0;
+//            gParamSuite = 0;
+//            gMemorySuite = 0;
+//            gThreadSuite = 0;
+//            gMessageSuite = 0;
+//            gMessageSuiteV2 = 0;
+//            gInteractSuite = 0;
+//            gParametricParameterSuite = 0;
           }
           
           {

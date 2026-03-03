@@ -228,8 +228,8 @@ namespace OFX {
     assert(_propHandle != 0);
     int value = 0;
     OfxStatus stat = gPropSuite->propGetInt(_propHandle, property, idx, &value);
-//    OFX::Log::error(stat != kOfxStatOK, "Failed on getting int property %s[%d], host returned status %s;",
-//      property, idx, mapStatusToString(stat));
+    OFX::Log::error(stat != kOfxStatOK, "Failed on getting int property %s[%d], host returned status %s;",
+      property, idx, mapStatusToString(stat));
     if(throwOnFailure)
       throwPropertyException(stat, property);
 
