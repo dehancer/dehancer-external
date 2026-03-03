@@ -801,6 +801,7 @@ namespace OFX {
       _clipPARPropNames[name] = std::string("OfxImageClipPropPAR_") + name;
       _clipROIPropNames[name] = std::string("OfxImageClipPropRoI_") + name;
       _clipFrameRangePropNames[name] = std::string("OfxImageClipPropFrameRange_") + name;
+      _clipPreferredColourspacesNames[name] = std::string("OfxImageClipPropPreferredColourspaces_") + name;
       return clip;
     }
     
@@ -1773,12 +1774,13 @@ namespace OFX {
     }
 
   /** @brief Allows an effect to change the preferred color spaces */
-  void ClipPreferencesSetter::setPreferredColourSpaces(std::list<std::string> spaces)
+  void ClipPreferencesSetter::setPreferredColourSpaces(Clip &clip, std::list<std::string> spaces)
     {
       doneSomething_ = true;
+      const std::string& propName = extractValueForName(clipPreferredColourspacesNames_, clip.name());
       int index = 0;
       for(const auto& s : spaces) {
-        outArgs_.propSetString(kOfxImageClipPropPreferredColourspaces "_Source", s, index++, false);
+        outArgs_.propSetString(propName.c_str(), s, index++, false);
       }
 
     }
@@ -2566,7 +2568,12 @@ namespace OFX {
           
           // set up our clip preferences setter
           ImageEffectDescriptor* desc = gEffectDescriptors[plugname][effectInstance->getContext()];
-          ClipPreferencesSetter prefs(outArgs, desc->getClipDepthPropNames(), desc->getClipComponentPropNames(), desc->getClipPARPropNames());
+          ClipPreferencesSetter prefs(
+            outArgs,
+            desc->getClipDepthPropNames(),
+            desc->getClipComponentPropNames(),
+            desc->getClipPARPropNames(),
+            desc->getClipPreferredColourspacesNames());
           
           // and call the plug-in client code
           effectInstance->getClipPreferences(prefs);
