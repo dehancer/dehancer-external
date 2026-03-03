@@ -306,8 +306,9 @@ namespace OFX {
         bool supportsTimeLineSuite;
         bool supportsMessageSuiteV2;
         bool ofxColorManagement;
+#ifdef DEHANCER_HOST_BASELIGHT
         std::list<std::string> supportedColorSpaces;
-
+#endif
     public:
         bool supportsPixelComponent(const PixelComponentEnum component) const;
         bool supportsBitDepth( const BitDepthEnum bitDepth) const;
@@ -377,8 +378,9 @@ namespace OFX {
 
         /** @brief say whether this clip is a 'mask', so the host can know to replace with a roto or similar, defaults to false */
         void setIsMask(bool v);
-
+#ifdef DEHANCER_HOST_BASELIGHT
         void setSupportedColorSpaces(const std::list<std::string>& spaces);
+#endif
     };
 
     ////////////////////////////////////////////////////////////////////////////////
@@ -485,10 +487,10 @@ namespace OFX {
 
         /** @brief Does the plugin have no spatial awareness, defaults to false */
         void setNoSpatialAwareness(bool v);
-
+#ifdef DEHANCER_HOST_BASELIGHT
         /** @brief Baselight: Set support for GetVRAMRequirementsSupported */
         void setGetVRAMRequirementsSupported(bool v);
-
+#endif
         void setOFXColorManagementStyle(const std::string& style);
 
 #ifdef OFX_SUPPORTS_OPENGLRENDER
@@ -705,10 +707,6 @@ namespace OFX {
 
         /** @brief get the string representing the pixel components */
         std::string getPixelComponentsProperty(void) const { return _clipProps.propGetString(kOfxImageEffectPropComponents);}
-
-        std::string getColorSpaceProperty(void) const { return _clipProps.propGetString("uk.ltd.filmlight.OfxImageEffectPropColourSpace", false);}
-
-        std::string getOFXColorSpaceProperty(void) const { return _clipProps.propGetString("OfxImageClipPropColourspace", false);}
 
         /** @brief what is the actual pixel depth of the clip */
         BitDepthEnum getUnmappedPixelDepth(void) const;
@@ -1208,13 +1206,12 @@ namespace OFX {
 
         /** @brief the effect has just had some values changed */
         virtual void endChanged(InstanceChangeReason reason);
-
+#ifdef DEHANCER_HOST_BASELIGHT
         /** @brief Baselight memory release request from host */
         virtual void setAllocatedVRAM(const void * metalDevice, double allocatedVRAM);
-
         /** @brief Baselight kOfxImageEffectActionGetOutputColourspace action */
         virtual void getOutputColorSpace(const std::list<std::string>& hostPreferredColorSpaces, std::string& pluginColorSpace);
-
+#endif
         /** @brief called when a custom param needs to be interpolated */
         virtual std::string interpolateCustomParam(const InterpolateCustomArgs &args, const std::string &paramName);
 

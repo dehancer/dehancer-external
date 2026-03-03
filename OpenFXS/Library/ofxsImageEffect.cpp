@@ -463,7 +463,7 @@ namespace OFX {
     {
       _clipProps.propSetInt(kOfxImageClipPropIsMask, int(v));
     }
-
+#ifdef DEHANCER_HOST_BASELIGHT
   void ClipDescriptor::setSupportedColorSpaces(const std::list<std::string>& spaces) {
       int i = 0;
       for (const auto& space : spaces) {
@@ -471,7 +471,7 @@ namespace OFX {
         ++i;
       }
     }
-
+#endif
     ////////////////////////////////////////////////////////////////////////////////
     // image effect descriptor
     
@@ -738,10 +738,12 @@ namespace OFX {
       _effectProps.propSetString(kOfxImageEffectPropNoSpatialAwareness, (v ? "true" : "false"));
     }
 
+#ifdef DEHANCER_HOST_BASELIGHT
     void ImageEffectDescriptor::setGetVRAMRequirementsSupported(bool v)
     {
       _effectProps.propSetInt("uk.ltd.filmlight.GetVRAMRequirementsSupported", v ? 1 : 0);
     }
+#endif
 
   void ImageEffectDescriptor::setOFXColorManagementStyle(const std::string& style) {
       _effectProps.propSetString(kOfxImageEffectPropColourManagementStyle, style, false);
@@ -1584,15 +1586,16 @@ namespace OFX {
     {
     }
 
+#ifdef DEHANCER_HOST_BASELIGHT
     /** @brief request from Baselight to release memory */
     void ImageEffect::setAllocatedVRAM(const void * metalDevice, double allocatedVRAM) {
-
     }
 
     void ImageEffect::getOutputColorSpace(const std::list<std::string>& hostPreferredColorSpaces, std::string& pluginColorSpace) {
       // override in the plugin
     }
-    
+#endif
+
     /** @brief get the time domain */
     bool ImageEffect::getTimeDomain(OfxRangeD &/*range*/)
     {
@@ -1901,8 +1904,9 @@ namespace OFX {
             
             gHostDescription.APIVersionMinor            = hostProps.propGetInt(kOfxPropAPIVersion, 1, false); // OFX 1.2
 
+#ifdef DEHANCER_HOST_BASELIGHT
             gHostDescription.nodeType = hostProps.propGetString("uk.ltd.filmlight.nodetype", false);
-
+#endif
 
             gHostDescription.hostName                   = hostProps.propGetString(kOfxPropName, true);
             OFX::Log::print("Host name %s, Node type %s", gHostDescription.hostName.c_str(), gHostDescription.nodeType.c_str());
@@ -1916,11 +1920,12 @@ namespace OFX {
             }
             OFX::Log::print("Colour management style %s", colorManagementStyle.c_str(), gHostDescription.nodeType.c_str());
 
+#ifdef DEHANCER_HOST_BASELIGHT
             if (!gHostDescription.ofxColorManagement) {
               // old way, get supported spaces
               gHostDescription.supportedColorSpaces = hostProps.propGetNString("uk.ltd.filmlight.OfxImageEffectPropSupportedColourSpaces", false);
             }
-
+#endif
             gHostDescription.hostLabel                  = hostProps.propGetString(kOfxPropLabel, true);
             gHostDescription.versionMajor               = hostProps.propGetInt(kOfxPropVersion, 0, false); // OFX 1.2
             gHostDescription.versionMinor               = hostProps.propGetInt(kOfxPropVersion, 1, false); // OFX 1.2
@@ -2894,6 +2899,7 @@ namespace OFX {
               // call the end edit function
               instance->endEdit();
             }
+#ifdef DEHANCER_HOST_BASELIGHT
             else if (action == "uk.ltd.filmlight.ActionSetAllocatedVRAM") {
               checkMainHandles(actionRaw, handleRaw, inArgsRaw, outArgsRaw, true, false, true);
 
@@ -2916,7 +2922,7 @@ namespace OFX {
               outArgs.propSetString(kOfxImageClipPropColourspace, pluginSpace, false);
               stat = kOfxStatOK;
             }
-
+#endif
 #ifdef OFX_SUPPORTS_OPENGLRENDER
               else if(action == kOfxActionOpenGLContextAttached) {
           checkMainHandles(actionRaw, handleRaw, inArgsRaw, outArgsRaw, false, true, true);
