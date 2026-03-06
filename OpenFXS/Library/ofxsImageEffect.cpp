@@ -2205,10 +2205,10 @@ namespace OFX {
           
           // kOfxImageEffectPropRenderQualityDraft appeared in OFX 1.4
           args.renderQualityDraft = inArgs.propGetInt(kOfxImageEffectPropRenderQualityDraft, false) != 0;
-
+#ifdef DEHANCER_HOST_BASELIGHT
           // in Baselight we support kOfxImageEffectPropNoSpatialAwareness
           args.noSpatialAwareness = inArgs.propGetString(kOfxImageEffectPropNoSpatialAwareness, false) == "true";
-          
+#endif
           args.fieldToRender = eFieldNone;
           std::string str = inArgs.propGetString(kOfxImageEffectPropFieldToRender);
           try {
