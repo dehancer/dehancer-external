@@ -463,7 +463,15 @@ namespace OFX {
     {
       _clipProps.propSetInt(kOfxImageClipPropIsMask, int(v));
     }
-    
+#ifdef DEHANCER_HOST_BASELIGHT
+  void ClipDescriptor::setSupportedColorSpaces(const std::list<std::string>& spaces) {
+      int i = 0;
+      for (const auto& space : spaces) {
+        _clipProps.propSetString("uk.ltd.filmlight.OfxImageEffectPropSupportedColourSpaces", space, i);
+        ++i;
+      }
+    }
+#endif
     ////////////////////////////////////////////////////////////////////////////////
     // image effect descriptor
     
@@ -730,6 +738,17 @@ namespace OFX {
       _effectProps.propSetString(kOfxImageEffectPropNoSpatialAwareness, (v ? "true" : "false"));
     }
 
+#ifdef DEHANCER_HOST_BASELIGHT
+    void ImageEffectDescriptor::setGetVRAMRequirementsSupported(bool v)
+    {
+      _effectProps.propSetInt("uk.ltd.filmlight.GetVRAMRequirementsSupported", v ? 1 : 0);
+    }
+#endif
+
+  void ImageEffectDescriptor::setOFXColorManagementStyle(const std::string& style) {
+      _effectProps.propSetString(kOfxImageEffectPropColourManagementStyle, style, false);
+    }
+
 #ifdef OFX_SUPPORTS_OPENGLRENDER
     /** @brief Does the plugin support OpenGL accelerated rendering (but is also capable of CPU rendering) ? */
   void ImageEffectDescriptor::setSupportsOpenGLRender(bool v) {
@@ -783,6 +802,7 @@ namespace OFX {
       _clipPARPropNames[name] = std::string("OfxImageClipPropPAR_") + name;
       _clipROIPropNames[name] = std::string("OfxImageClipPropRoI_") + name;
       _clipFrameRangePropNames[name] = std::string("OfxImageClipPropFrameRange_") + name;
+      _clipPreferredColourspacesNames[name] = std::string("OfxImageClipPropPreferredColourspaces_") + name;
       return clip;
     }
     
@@ -1565,7 +1585,17 @@ namespace OFX {
     void ImageEffect::endChanged(InstanceChangeReason /*reason*/)
     {
     }
-    
+
+#ifdef DEHANCER_HOST_BASELIGHT
+    /** @brief request from Baselight to release memory */
+    void ImageEffect::setAllocatedVRAM(const void * metalDevice, double allocatedVRAM) {
+    }
+
+    void ImageEffect::getOutputColorSpace(const std::list<std::string>& hostPreferredColorSpaces, std::string& pluginColorSpace) {
+      // override in the plugin
+    }
+#endif
+
     /** @brief get the time domain */
     bool ImageEffect::getTimeDomain(OfxRangeD &/*range*/)
     {
@@ -1744,7 +1774,19 @@ namespace OFX {
       doneSomething_ = true;
       outArgs_.propSetDouble(kOfxImageEffectPropFrameRate, v);
     }
-    
+
+  /** @brief Allows an effect to change the preferred color spaces */
+  void ClipPreferencesSetter::setPreferredColourSpaces(Clip &clip, std::list<std::string> spaces)
+    {
+      doneSomething_ = true;
+      const std::string& propName = extractValueForName(clipPreferredColourspacesNames_, clip.name());
+      int index = 0;
+      for(const auto& s : spaces) {
+        outArgs_.propSetString(propName.c_str(), s, index++, false);
+      }
+
+    }
+
     /** @brief Set the premultiplication state of the output clip. */
     void ClipPreferencesSetter::setOutputPremultiplication(PreMultiplicationEnum v)
     {
@@ -1861,8 +1903,29 @@ namespace OFX {
             }
             
             gHostDescription.APIVersionMinor            = hostProps.propGetInt(kOfxPropAPIVersion, 1, false); // OFX 1.2
-            
+
+#ifdef DEHANCER_HOST_BASELIGHT
+            gHostDescription.nodeType = hostProps.propGetString("uk.ltd.filmlight.nodetype", false);
+#endif
+
             gHostDescription.hostName                   = hostProps.propGetString(kOfxPropName, true);
+            OFX::Log::print("Host name %s, Node type %s", gHostDescription.hostName.c_str(), gHostDescription.nodeType.c_str());
+
+            std::string colorManagementStyle = hostProps.propGetString(kOfxImageEffectPropColourManagementStyle, false);
+            if (colorManagementStyle.empty()) {
+              gHostDescription.ofxColorManagement = false;
+            }
+            else {
+              gHostDescription.ofxColorManagement = true;
+            }
+            OFX::Log::print("Colour management style %s", colorManagementStyle.c_str(), gHostDescription.nodeType.c_str());
+
+#ifdef DEHANCER_HOST_BASELIGHT
+            if (!gHostDescription.ofxColorManagement) {
+              // old way, get supported spaces
+              gHostDescription.supportedColorSpaces = hostProps.propGetNString("uk.ltd.filmlight.OfxImageEffectPropSupportedColourSpaces", false);
+            }
+#endif
             gHostDescription.hostLabel                  = hostProps.propGetString(kOfxPropLabel, true);
             gHostDescription.versionMajor               = hostProps.propGetInt(kOfxPropVersion, 0, false); // OFX 1.2
             gHostDescription.versionMinor               = hostProps.propGetInt(kOfxPropVersion, 1, false); // OFX 1.2
@@ -1960,9 +2023,9 @@ namespace OFX {
         void loadAction(void)
         {
           gLoadCount++;
-          
           //OfxStatus status = kOfxStatOK;
-          
+          OFX::Log::print( "Load action");
+
           // fetch the suites
           OFX::Log::error(gHost == 0, "Host pointer has not been set.");
           if(!gHost) throw OFX::Exception::Suite(kOfxStatErrBadHandle);
@@ -1987,7 +2050,7 @@ namespace OFX {
             
             // OK check and fetch host information
             fetchHostDescription(gHost);
-            
+
             /// and set some dendent flags
             OFX::gHostDescription.supportsMessageSuiteV2 = gMessageSuiteV2 != NULL;
             OFX::gHostDescription.supportsProgressSuite = (gProgressSuiteV1 != NULL || gProgressSuiteV2 != NULL);
@@ -2018,7 +2081,6 @@ namespace OFX {
           
           if(gLoadCount==0)
           {
-            // force these to null
 //            gEffectSuite = 0;
 //            gPropSuite = 0;
 //            gParamSuite = 0;
@@ -2130,7 +2192,6 @@ namespace OFX {
 
           args.isEnabledMetalRender  = inArgs.propGetInt(kOfxImageEffectPropMetalEnabled, false) != 0;
           args.pMetalCmdQ            = inArgs.propGetPointer(kOfxImageEffectPropMetalCommandQueue, false);
-
 #ifdef OFX_SUPPORTS_OPENGLRENDER
           // Don't throw an exception if the following inArgs are not present.
           // OpenGL rendering appeared in OFX 1.3
@@ -2144,7 +2205,10 @@ namespace OFX {
           
           // kOfxImageEffectPropRenderQualityDraft appeared in OFX 1.4
           args.renderQualityDraft = inArgs.propGetInt(kOfxImageEffectPropRenderQualityDraft, false) != 0;
-          
+#ifdef DEHANCER_HOST_BASELIGHT
+          // in Baselight we support kOfxImageEffectPropNoSpatialAwareness
+          args.noSpatialAwareness = inArgs.propGetString(kOfxImageEffectPropNoSpatialAwareness, false) == "true";
+#endif
           args.fieldToRender = eFieldNone;
           std::string str = inArgs.propGetString(kOfxImageEffectPropFieldToRender);
           try {
@@ -2505,7 +2569,12 @@ namespace OFX {
           
           // set up our clip preferences setter
           ImageEffectDescriptor* desc = gEffectDescriptors[plugname][effectInstance->getContext()];
-          ClipPreferencesSetter prefs(outArgs, desc->getClipDepthPropNames(), desc->getClipComponentPropNames(), desc->getClipPARPropNames());
+          ClipPreferencesSetter prefs(
+            outArgs,
+            desc->getClipDepthPropNames(),
+            desc->getClipComponentPropNames(),
+            desc->getClipPARPropNames(),
+            desc->getClipPreferredColourspacesNames());
           
           // and call the plug-in client code
           effectInstance->getClipPreferences(prefs);
@@ -2765,8 +2834,9 @@ namespace OFX {
               checkMainHandles(actionRaw, handleRaw, inArgsRaw, outArgsRaw, false, true, false);
               
               // call the frames needed action, return OK if it does something
-              if(clipPreferencesAction(handle, outArgs, plugname))
+              if(clipPreferencesAction(handle, outArgs, plugname)) {
                 stat = kOfxStatOK;
+              }
             }
             else if(action == kOfxActionPurgeCaches) {
               checkMainHandles(actionRaw, handleRaw, inArgsRaw, outArgsRaw, false, true, true);
@@ -2829,6 +2899,30 @@ namespace OFX {
               // call the end edit function
               instance->endEdit();
             }
+#ifdef DEHANCER_HOST_BASELIGHT
+            else if (action == "uk.ltd.filmlight.ActionSetAllocatedVRAM") {
+              checkMainHandles(actionRaw, handleRaw, inArgsRaw, outArgsRaw, true, false, true);
+
+              double setVRAM = inArgs.propGetDouble("uk.ltd.filmlight.AllocatedVRAM");
+              void * metalDevice = inArgs.propGetPointer("uk.ltd.filmlight.MetalDevice");
+              OFX::Log::print("Baselight set VRAM: metal %p VRAM %f, handle %p", metalDevice, setVRAM, handle);
+              if (handle) {
+                ImageEffect *instance = retrieveImageEffectPointer(handle);
+                instance->setAllocatedVRAM(metalDevice, setVRAM);
+              }
+            }
+            else if (action == kOfxImageEffectActionGetOutputColourspace) {
+              checkMainHandles(actionRaw, handleRaw, inArgsRaw, outArgsRaw, false, false, false);
+              auto hostSpaces = inArgs.propGetNString(kOfxImageClipPropPreferredColourspaces, false);
+              std::string pluginSpace;
+              if (handle) {
+                ImageEffect *instance = retrieveImageEffectPointer(handle);
+                instance->getOutputColorSpace(hostSpaces, pluginSpace);
+              }
+              outArgs.propSetString(kOfxImageClipPropColourspace, pluginSpace, false);
+              stat = kOfxStatOK;
+            }
+#endif
 #ifdef OFX_SUPPORTS_OPENGLRENDER
               else if(action == kOfxActionOpenGLContextAttached) {
           checkMainHandles(actionRaw, handleRaw, inArgsRaw, outArgsRaw, false, true, true);
@@ -2856,7 +2950,6 @@ namespace OFX {
               OFX::Log::error(true, "Requested action was a null pointer.");
             }
           }
-            
             // catch suite exceptions
           catch (const OFX::Exception::Suite &ex)
           {

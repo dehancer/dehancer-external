@@ -49,7 +49,9 @@ This file contains headers for classes that are used to validate property sets a
 /** @brief Null pointer definition */
 #define NULLPTR ((void *)(0))
 
-// #define  kOfxsDisableValidation
+#ifndef DEHANCER_HOST_DAVINCI
+#define  kOfxsDisableValidation // disable validation, it does not work in Baselight and Assimilate generating too many false positives in the log
+#endif
 
 // disable validation if not a debug build
 #ifndef DEBUG_BUILD

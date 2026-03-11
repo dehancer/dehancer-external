@@ -259,6 +259,7 @@ namespace OFX {
         int APIVersionMinor;
         std::string hostName;
         std::string hostLabel;
+        std::string nodeType;
         int versionMajor;
         int versionMinor;
         int versionMicro;
@@ -304,7 +305,10 @@ namespace OFX {
         bool supportsProgressSuite;
         bool supportsTimeLineSuite;
         bool supportsMessageSuiteV2;
-
+        bool ofxColorManagement;
+#ifdef DEHANCER_HOST_BASELIGHT
+        std::list<std::string> supportedColorSpaces;
+#endif
     public:
         bool supportsPixelComponent(const PixelComponentEnum component) const;
         bool supportsBitDepth( const BitDepthEnum bitDepth) const;
@@ -374,6 +378,9 @@ namespace OFX {
 
         /** @brief say whether this clip is a 'mask', so the host can know to replace with a roto or similar, defaults to false */
         void setIsMask(bool v);
+#ifdef DEHANCER_HOST_BASELIGHT
+        void setSupportedColorSpaces(const std::list<std::string>& spaces);
+#endif
     };
 
     ////////////////////////////////////////////////////////////////////////////////
@@ -400,6 +407,7 @@ namespace OFX {
         std::map<std::string, std::string> _clipPARPropNames;
         std::map<std::string, std::string> _clipROIPropNames;
         std::map<std::string, std::string> _clipFrameRangePropNames;
+        std::map<std::string, std::string> _clipPreferredColourspacesNames;
 
         std::unique_ptr<EffectOverlayDescriptor> _overlayDescriptor;
     public :
@@ -479,6 +487,11 @@ namespace OFX {
 
         /** @brief Does the plugin have no spatial awareness, defaults to false */
         void setNoSpatialAwareness(bool v);
+#ifdef DEHANCER_HOST_BASELIGHT
+        /** @brief Baselight: Set support for GetVRAMRequirementsSupported */
+        void setGetVRAMRequirementsSupported(bool v);
+#endif
+        void setOFXColorManagementStyle(const std::string& style);
 
 #ifdef OFX_SUPPORTS_OPENGLRENDER
         /** @brief Does the plugin support OpenGL accelerated rendering (but is also capable of CPU rendering) ? */
@@ -503,6 +516,7 @@ namespace OFX {
         const std::map<std::string, std::string>& getClipPARPropNames() const { return _clipPARPropNames; }
         const std::map<std::string, std::string>& getClipROIPropNames() const { return _clipROIPropNames; }
         const std::map<std::string, std::string>& getClipFrameRangePropNames() const { return _clipFrameRangePropNames; }
+        const std::map<std::string, std::string>& getClipPreferredColourspacesNames() const { return _clipPreferredColourspacesNames; }
 
         /** @brief override this to create an interact for the effect */
         virtual void setOverlayInteractDescriptor(EffectOverlayDescriptor* desc);
@@ -810,6 +824,7 @@ namespace OFX {
         bool      sequentialRenderStatus;
         bool      interactiveRenderStatus;
         bool      renderQualityDraft;
+        bool      noSpatialAwareness;
     };
 
     /** @brief POD struct to pass rendering arguments into @ref OFX::ImageEffect::isIdentity */
@@ -903,17 +918,20 @@ namespace OFX {
         const StringStringMap& clipDepthPropNames_;
         const StringStringMap& clipComponentPropNames_;
         const StringStringMap& clipPARPropNames_;
+        const StringStringMap& clipPreferredColourspacesNames_;
         const std::string& extractValueForName(const StringStringMap& m, const std::string& name);
     public :
         ClipPreferencesSetter( OFX::PropertySet props,
                                const StringStringMap& depthPropNames,
                                const StringStringMap& componentPropNames,
-                               const StringStringMap& PARPropNames)
+                               const StringStringMap& PARPropNames,
+                               const StringStringMap& PreferredColourspacesNames)
                 : outArgs_(props)
                 , doneSomething_(false)
                 , clipDepthPropNames_(depthPropNames)
                 , clipComponentPropNames_(componentPropNames)
                 , clipPARPropNames_(PARPropNames)
+                , clipPreferredColourspacesNames_(PreferredColourspacesNames)
         {}
 
         bool didSomething(void) const {return doneSomething_;}
@@ -951,6 +969,8 @@ namespace OFX {
         Default is controlled by the host, typically the framerate of the input clips.
         */
         void setOutputFrameRate(double v);
+
+        void setPreferredColourSpaces(Clip &clip, std::list<std::string> spaces);
 
         /** @brief Set the premultiplication state of the output clip.
 
@@ -1186,7 +1206,12 @@ namespace OFX {
 
         /** @brief the effect has just had some values changed */
         virtual void endChanged(InstanceChangeReason reason);
-
+#ifdef DEHANCER_HOST_BASELIGHT
+        /** @brief Baselight memory release request from host */
+        virtual void setAllocatedVRAM(const void * metalDevice, double allocatedVRAM);
+        /** @brief Baselight kOfxImageEffectActionGetOutputColourspace action */
+        virtual void getOutputColorSpace(const std::list<std::string>& hostPreferredColorSpaces, std::string& pluginColorSpace);
+#endif
         /** @brief called when a custom param needs to be interpolated */
         virtual std::string interpolateCustomParam(const InterpolateCustomArgs &args, const std::string &paramName);
 
