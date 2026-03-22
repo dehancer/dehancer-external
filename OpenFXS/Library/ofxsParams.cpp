@@ -1086,6 +1086,11 @@ namespace OFX {
   void ParamSetDescriptor::defineRawParam(const std::string &name, ParamTypeEnum paramType, OfxPropertySetHandle &props)
   {
     OfxStatus stat = OFX::Private::gParamSuite->paramDefine(_paramSetHandle, mapParamTypeEnumToString(paramType), name.c_str(), &props);
+#ifdef DEHANCER_HOST_VEGAS
+    if (stat == kOfxStatErrUnknown) {
+      OFX::Log::print("kOfxStatErrUnknown, name %s type %s", name.c_str(), mapParamTypeEnumToString(paramType));
+    }
+#endif
     throwSuiteStatusException(stat);
   }
 
