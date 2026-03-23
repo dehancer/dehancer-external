@@ -1590,10 +1590,10 @@ namespace OFX {
 #else
     ////////////////////////////////////////////////////////////////////////////////
     /** @brief Wraps up a string choice param over choice param (for Vegas using OFX 1.1) */
-    class StrChoiceParam : private ChoiseParam
+    class StrChoiceParam : private ChoiceParam
     {
         protected :
-            mDeclareProtectedAssignAndCCBase(StrChoiceParam, StringParam);
+            mDeclareProtectedAssignAndCCBase(StrChoiceParam, ChoiceParam);
         StrChoiceParam() { assert(false); }
 
         protected :
@@ -1619,7 +1619,7 @@ namespace OFX {
         /** @brief clear all the options so as to add some new ones in */
         void resetOptions();
 
-        // Methods from StringParam as a facade to ChoiseParam
+        // Methods from StringParam as a facade to ChoiceParam
 
         /** @brief set the default value */
         void setDefault(const std::string &v);
@@ -1640,7 +1640,7 @@ namespace OFX {
         void setValueAtTime(double t, const std::string &v);
 
         private:
-          std::vector<std::pair<std::string, std::string> m_StringOptions;
+          std::vector<std::pair<std::string, std::string>> m_StringOptions;
 
     };
 #endif
