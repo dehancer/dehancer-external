@@ -2652,7 +2652,7 @@ namespace OFX {
   /// Vegas does not support StrChoiceParam, realize it over ChoiceParam
   /** @brief hidden constructor */
   StrChoiceParam::StrChoiceParam(const ParamSet* p_ParamSet, const std::string& p_Name, OfxParamHandle p_Handle)
-      : StringParam(p_ParamSet, p_Name, p_Handle)
+      : ChoiceParam(p_ParamSet, p_Name, p_Handle)
   {
       _paramType = eStrChoiceParam;
   }
@@ -2682,7 +2682,7 @@ namespace OFX {
           if (p.first == p_Index)
           {
             _paramProps.propSetString(kOfxParamPropChoiceOption, p_Option, item);
-            m_stringOptions[item].second = p_Option;
+            m_StringOptions[item].second = p_Option;
             return;
           }
           ++item;
@@ -2724,12 +2724,12 @@ namespace OFX {
     {
       if (p.first == v)
       {
-        setDefault(item);
+        ChoiceParam::setDefault(item);
         return;
       }
       ++item;
     }
-    setDefault(0);
+    ChoiceParam::setDefault(0);
 
   }
 
@@ -2737,7 +2737,7 @@ namespace OFX {
   void StrChoiceParam::getDefault(std::string &v)
   {
     int item;
-    getDefault(item);
+    ChoiceParam::getDefault(item);
     if (item <= m_StringOptions.size())
     {
       v = m_StringOptions[item].first;
@@ -2753,7 +2753,7 @@ namespace OFX {
   void StrChoiceParam::getValue(std::string &v)
   {
     int item;
-    getValue(item);
+    ChoiceParam::getValue(item);
     if (item <= m_StringOptions.size())
     {
       v = m_StringOptions[item].first;
@@ -2769,7 +2769,7 @@ namespace OFX {
   void StrChoiceParam::getValueAtTime(double t, std::string &v)
   {
     int item;
-    getValueAtTime(t, item);
+    ChoiceParam::getValueAtTime(t, item);
     if (item <= m_StringOptions.size())
     {
       v = m_StringOptions[item].first;
@@ -2789,14 +2789,14 @@ namespace OFX {
     {
       if (p.first == v)
       {
-        setValue(item);
+        ChoiceParam::setValue(item);
         return;
       }
       ++item;
     }
 
     OFX::Log::print("setValue(), value %s not found", v.c_str());
-    setValue(0);
+    ChoiceParam::setValue(0);
   }
 
   /** @brief set the value at a time, implicitly adds a keyframe */
@@ -2807,14 +2807,14 @@ namespace OFX {
     {
       if (p.first == v)
       {
-        setValueAtTime(item);
+        ChoiceParam::setValueAtTime(t, item);
         return;
       }
       ++item;
     }
 
     OFX::Log::print("setValueAtTime(), value %s not found", v.c_str());
-    setValue(0);
+    ChoiceParam::setValueAtTime(t, 0);
   }
 
 #endif
