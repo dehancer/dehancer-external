@@ -1120,6 +1120,12 @@ namespace OFX {
   /** @brief calls the raw OFX routine to define a param */
   void ParamSetDescriptor::defineRawParam(const std::string &name, ParamTypeEnum paramType, OfxPropertySetHandle &props)
   {
+#ifdef DEHANCER_HOST_VEGAS
+    if (paramType == eStrChoiceParam)
+    {
+      paramType = eChoiceParam;
+    }
+#endif
     OfxStatus stat = OFX::Private::gParamSuite->paramDefine(_paramSetHandle, mapParamTypeEnumToString(paramType), name.c_str(), &props);
 #ifdef DEHANCER_HOST_VEGAS
     if (stat == kOfxStatErrUnknown) {

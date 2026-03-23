@@ -785,6 +785,12 @@ namespace OFX {
 
             // have we made it already in this param set and is it of the correct type
             if(ParamDescriptor *param  = findPreviouslyDefinedParam(name)) {
+#ifdef DEHANCER_HOST_VEGAS
+                if (paramType == eStrChoiceParam)
+                {
+                    paramType = eChoiceParam;
+                }
+#endif
                 if(param->getType() == paramType) {
                     paramPtr = (T *) param; // could be a dynamic cast here
                     return true;
