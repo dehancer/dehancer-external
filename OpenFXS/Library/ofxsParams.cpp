@@ -1126,6 +1126,7 @@ namespace OFX {
       paramType = eChoiceParam;
     }
 #endif
+    OFX::Log::print("defineRawParam %s, type=%d", name.c_str(), paramType);
     OfxStatus stat = OFX::Private::gParamSuite->paramDefine(_paramSetHandle, mapParamTypeEnumToString(paramType), name.c_str(), &props);
 #ifdef DEHANCER_HOST_VEGAS
     if (stat == kOfxStatErrUnknown) {
@@ -2744,7 +2745,7 @@ namespace OFX {
   {
     int item;
     ChoiceParam::getDefault(item);
-    if (item <= m_StringOptions.size())
+    if (item < m_StringOptions.size())
     {
       v = m_StringOptions[item].first;
     }
@@ -2760,7 +2761,7 @@ namespace OFX {
   {
     int item;
     ChoiceParam::getValue(item);
-    if (item <= m_StringOptions.size())
+    if (item < m_StringOptions.size())
     {
       v = m_StringOptions[item].first;
     }
@@ -2776,7 +2777,7 @@ namespace OFX {
   {
     int item;
     ChoiceParam::getValueAtTime(t, item);
-    if (item <= m_StringOptions.size())
+    if (item < m_StringOptions.size())
     {
       v = m_StringOptions[item].first;
     }
@@ -3140,6 +3141,7 @@ namespace OFX {
 
     // make sure it is of our type
     std::string paramTypeStr = props.propGetString(kOfxParamPropType);
+    OFX::Log::print("propGetString %s", paramTypeStr.c_str());
 #ifdef DEHANCER_HOST_VEGAS
     // we do not have eStrChoiceParam and wrap it over eChoiceParam for Vegas
     if (paramType == eStrChoiceParam)
