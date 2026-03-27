@@ -1596,7 +1596,7 @@ namespace OFX {
 #else
     ////////////////////////////////////////////////////////////////////////////////
     /** @brief Wraps up a string choice param over choice param (for Vegas using OFX 1.1) */
-    class StrChoiceParam : protected ChoiceParam
+    class StrChoiceParam : public ChoiceParam
     {
         protected :
             mDeclareProtectedAssignAndCCBase(StrChoiceParam, ChoiceParam);
