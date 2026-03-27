@@ -82,7 +82,7 @@ namespace OFX {
           }
 
         // did we do it?
-        throwSuiteStatusException(stat);
+        if (stat == kOfxStatErrUnsupported) { OFX::Log::print("Unsupported: 20"); } throwSuiteStatusException(stat);
       }
     }
 
@@ -127,7 +127,7 @@ namespace OFX {
       : _handle(0)
     {
       OfxStatus stat = OFX::Private::gThreadSuite ? OFX::Private::gThreadSuite->mutexCreate(&_handle, lockCount) : kOfxStatReplyDefault;
-      throwSuiteStatusException(stat);
+      if (stat == kOfxStatErrUnsupported) { OFX::Log::print("Unsupported: 21"); } throwSuiteStatusException(stat);
     }
 
     /** @brief dtor */
@@ -141,14 +141,14 @@ namespace OFX {
     void Mutex::lock()
     {
       OfxStatus stat = OFX::Private::gThreadSuite ? OFX::Private::gThreadSuite->mutexLock(_handle) : kOfxStatReplyDefault;
-      throwSuiteStatusException(stat);
+      if (stat == kOfxStatErrUnsupported) { OFX::Log::print("Unsupported: 22"); } throwSuiteStatusException(stat);
     }
 
     /** @brief unlock it */
     void Mutex::unlock()
     {
       OfxStatus stat = OFX::Private::gThreadSuite ? OFX::Private::gThreadSuite->mutexUnLock(_handle) : kOfxStatReplyDefault;
-      throwSuiteStatusException(stat);
+      if (stat == kOfxStatErrUnsupported) { OFX::Log::print("Unsupported: 23"); } throwSuiteStatusException(stat);
     }
 
     /** @brief attempt to lock, non-blocking */

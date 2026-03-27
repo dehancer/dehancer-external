@@ -75,7 +75,7 @@ namespace OFX {
     case kOfxStatErrBadHandle :
     case kOfxStatErrBadIndex :
     default :
-      throwSuiteStatusException(stat);
+      if (stat == kOfxStatErrUnsupported) { OFX::Log::print("Unsupported: 95"); } throwSuiteStatusException(stat);
       break;
     }
   }
