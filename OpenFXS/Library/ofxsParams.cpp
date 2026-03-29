@@ -2767,7 +2767,7 @@ namespace OFX {
     }
     else
     {
-      OFX::Log::print("getValue(), returned index %d out of range %d", item, m_StringOptions.size());
+      OFX::Log::print("%s.getValue(), returned index %d out of range %d", _paramName.c_str(), item, m_StringOptions.size());
       v = "";
     }
   }
