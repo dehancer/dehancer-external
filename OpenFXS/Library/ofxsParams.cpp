@@ -2668,7 +2668,11 @@ namespace OFX {
   int StrChoiceParam::getNOptions()
   {
     int nCurrentValues = _paramProps.propGetDimension(kOfxParamPropChoiceOption);
-    return nCurrentValues;
+    int numOptionsStrChoice = m_StringOptions.size();
+    if (strChoiceNumOptions != nCurrentValues) {
+      OFX::Log::print("ChoiceOptions %d, string options %d, choices are not the same", nCurrentValues, numOptionsStrChoice);
+    }
+    return numOptionsStrChoice;
   }
 
   /** @brief add another option */
