@@ -2671,6 +2671,8 @@ namespace OFX {
     int numOptionsStrChoice = m_StringOptions.size();
     if (numOptionsStrChoice != nCurrentValues) {
       OFX::Log::print("Param %s: ChoiceOptions %d, string options %d, choices are not the same", _paramName.c_str(),  nCurrentValues, numOptionsStrChoice);
+      resetOptions();
+      numOptionsStrChoice = 0;
     }
     return numOptionsStrChoice;
   }
