@@ -2757,7 +2757,7 @@ namespace OFX {
     }
     else
     {
-      OFX::Log::print("getDefault(), returned index %d out of range %d", item, m_StringOptions.size());
+      OFX::Log::print("%s.getDefault(), returned index %d out of range %d", _paramName.c_str(), item, m_StringOptions.size());
       v = "";
     }
   }
@@ -2789,7 +2789,7 @@ namespace OFX {
     }
     else
     {
-      OFX::Log::print("getValueAtTime(), returned index %d out of range %d", item, m_StringOptions.size());
+      OFX::Log::print("%s.getValueAtTime(), returned index %d out of range %d", _paramName.c_str(), item, m_StringOptions.size());
       v = "";
     }
   }
@@ -2808,7 +2808,7 @@ namespace OFX {
       ++item;
     }
 
-    OFX::Log::print("setValue(), value %s not found", v.c_str());
+    OFX::Log::print("%s.setValue(), value %s not found", _paramName.c_str(), v.c_str());
     ChoiceParam::setValue(0);
   }
 
@@ -2826,7 +2826,7 @@ namespace OFX {
       ++item;
     }
 
-    OFX::Log::print("setValueAtTime(), value %s not found", v.c_str());
+    OFX::Log::print("%s.setValueAtTime(), value %s not found", _paramName.c_str(), v.c_str());
     ChoiceParam::setValueAtTime(t, 0);
   }
 
