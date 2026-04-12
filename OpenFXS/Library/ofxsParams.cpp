@@ -2681,6 +2681,7 @@ namespace OFX {
   void StrChoiceParam::appendOption(const std::string& p_Enum, const std::string& p_Option)
   {
     int nCurrentValues = _paramProps.propGetDimension(kOfxParamPropChoiceOption);
+    OFX::Log::print("Param %s, adding option %s to %d position, number of strings %d", _paramName.c_str(), p_Option.c_str(), nCurrentValues, m_StringOptions.size());
     _paramProps.propSetString(kOfxParamPropChoiceOption, p_Option, nCurrentValues);
 
     m_StringOptions.push_back(std::make_pair(p_Enum, p_Option));
