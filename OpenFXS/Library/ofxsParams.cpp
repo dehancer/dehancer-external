@@ -3192,9 +3192,11 @@ namespace OFX {
 
     PropertySet props(propHandle);
 
+
     // make sure it is of our type
     std::string paramTypeStr = props.propGetString(kOfxParamPropType);
     ParamTypeEnum t = mapParamTypeStringToEnum(paramTypeStr.c_str());
+    OFX::Log::print("ParamSet::getParam %s type %s", name.c_str(), paramTypeStr.c_str());
     switch(t)
     {
     case eStringParam :
