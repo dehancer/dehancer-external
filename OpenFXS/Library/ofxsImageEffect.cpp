@@ -482,7 +482,7 @@ namespace OFX {
       // fetch the property set handle of the effect
       OfxPropertySetHandle props;
       OfxStatus stat = OFX::Private::gEffectSuite->getPropertySet(handle, &props);
-      if (stat == kOfxStatErrUnsupported) { OFX::Log::print("Unsupported: 7 "); } throwSuiteStatusException(stat);
+      throwSuiteStatusException(stat);
       _effectProps.propSetHandle(props);
       
       OFX::Validation::validatePluginDescriptorProperties(props);
@@ -490,7 +490,7 @@ namespace OFX {
       // fetch the param set handle and set it in our ParamSetDescriptor base
       OfxParamSetHandle paramSetHandle;
       stat = OFX::Private::gEffectSuite->getParamSet(handle, &paramSetHandle);
-      if (stat == kOfxStatErrUnsupported) { OFX::Log::print("Unsupported: 8 "); } throwSuiteStatusException(stat);
+      throwSuiteStatusException(stat);
       setParamSetHandle(paramSetHandle);
     }
     
@@ -930,7 +930,7 @@ namespace OFX {
   {
     OfxStatus stat = OFX::Private::gOpenGLRenderSuite->clipFreeTexture(_imageProps.propSetHandle());
     if (stat != kOfxStatOK) {
-      if (stat == kOfxStatErrUnsupported) { OFX::Log::print("Unsupported: 9 "); } throwSuiteStatusException(stat);
+      throwSuiteStatusException(stat);
     }
   }
 #endif
@@ -1190,7 +1190,7 @@ namespace OFX {
       if(stat == kOfxStatFailed) {
         bounds.x1 = bounds.x2 = bounds.y1 = bounds.y2 = 0;
       }
-      if (stat == kOfxStatErrUnsupported) { OFX::Log::print("Unsupported: 10"); } throwSuiteStatusException(stat);
+      throwSuiteStatusException(stat);
       return bounds;
     }
     
@@ -1208,9 +1208,8 @@ namespace OFX {
       if(stat == kOfxStatFailed) {
         return NULL; // not an error, fetched images out of range/region, assume black and transparent
       }
-      else {
-          if (stat == kOfxStatErrUnsupported) { OFX::Log::print("Unsupported: 11"); } throwSuiteStatusException(stat);
-      }
+      else
+        throwSuiteStatusException(stat);
       
       return new Image(imageHandle);
     }
@@ -1223,9 +1222,9 @@ namespace OFX {
       if(stat == kOfxStatFailed) {
         return NULL; // not an error, fetched images out of range/region, assume black and transparent
       }
-      else {
-        if (stat == kOfxStatErrUnsupported) { OFX::Log::print("Unsupported: 12"); } throwSuiteStatusException(stat);
-      }
+      else
+        throwSuiteStatusException(stat);
+      
       return new Image(imageHandle);
     }
 
@@ -1238,7 +1237,7 @@ namespace OFX {
     OfxPropertySetHandle hTex;
     OfxStatus stat = Private::gOpenGLRenderSuite->clipLoadTexture(_clipHandle, t, format == eBitDepthNone ? NULL : mapBitDepthEnumToStr(format), region, &hTex);
     if (stat != kOfxStatOK) {
-      if (stat == kOfxStatErrUnsupported) { OFX::Log::print("Unsupported: 13"); } throwSuiteStatusException(stat);
+      throwSuiteStatusException(stat);
     }
     return new Texture(hTex);
   }
@@ -1269,7 +1268,7 @@ namespace OFX {
       // the param set daddy-oh
       OfxParamSetHandle paramSet;
       OfxStatus stat = OFX::Private::gEffectSuite->getParamSet(handle, &paramSet);
-      if (stat == kOfxStatErrUnsupported) { OFX::Log::print("Unsupported: 14"); } throwSuiteStatusException(stat);
+      throwSuiteStatusException(stat);
       setParamSetHandle(paramSet);
       
     }
@@ -1431,7 +1430,7 @@ namespace OFX {
       OfxImageClipHandle clipHandle = 0;
       OfxPropertySetHandle propHandle = 0;
       OfxStatus stat = OFX::Private::gEffectSuite->clipGetHandle(_effectHandle, name.c_str(), &clipHandle, &propHandle);
-      if (stat == kOfxStatErrUnsupported) { OFX::Log::print("Unsupported: 15"); } throwSuiteStatusException(stat);
+      throwSuiteStatusException(stat);
       
       // and make one
       Clip *newClip = new Clip(this, name, clipHandle, propHandle);
@@ -1850,7 +1849,7 @@ namespace OFX {
       OfxStatus stat = OFX::Private::gEffectSuite->imageMemoryAlloc(effectHandle, nBytes, &_handle);
       if(stat == kOfxStatErrMemory)
         throw std::bad_alloc();
-      if (stat == kOfxStatErrUnsupported) { OFX::Log::print("Unsupported: 16"); } throwSuiteStatusException(stat);
+      throwSuiteStatusException(stat);
     }
     
     /** @brief dtor */
@@ -1868,7 +1867,7 @@ namespace OFX {
       OfxStatus stat = OFX::Private::gEffectSuite->imageMemoryLock(_handle, &ptr);
       if(stat == kOfxStatErrMemory)
         throw std::bad_alloc();
-      if (stat == kOfxStatErrUnsupported) { OFX::Log::print("Unsupported: 17"); } throwSuiteStatusException(stat);
+      throwSuiteStatusException(stat);
       return ptr;
     }
     
@@ -2015,7 +2014,7 @@ namespace OFX {
           // get the property handle
           OfxPropertySetHandle propHandle;
           OfxStatus stat = OFX::Private::gEffectSuite->getPropertySet(handle, &propHandle);
-          if (stat == kOfxStatErrUnsupported) { OFX::Log::print("Unsupported: 18"); } throwSuiteStatusException(stat);
+          throwSuiteStatusException(stat);
           return OFX::PropertySet(propHandle);
         }
         
@@ -2125,7 +2124,7 @@ namespace OFX {
           // get the prop set on the handle
           OfxPropertySetHandle propHandle;
           OfxStatus stat = OFX::Private::gEffectSuite->getPropertySet(handle, &propHandle);
-          if (stat == kOfxStatErrUnsupported) { OFX::Log::print("Unsupported: 19"); } throwSuiteStatusException(stat);
+          throwSuiteStatusException(stat);
           
           // make our wrapper object
           PropertySet props(propHandle);

@@ -1867,7 +1867,7 @@ namespace OFX {
             else {
                 // ok define one and add it in
                 OfxParamHandle paramHandle;
-                //OFX::Log::print("Fetching param %s type %d", name.c_str(), paramType);
+                OFX::Log::print("Fetching param %s type %d", name.c_str(), paramType);
                 fetchRawParam(name, paramType, paramHandle);
 
                 // make out support descriptor class

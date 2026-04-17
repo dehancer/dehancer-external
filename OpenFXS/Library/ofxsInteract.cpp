@@ -78,7 +78,7 @@ namespace OFX {
     // get the properties set on this handle
     OfxPropertySetHandle propHandle;
     OfxStatus stat = OFX::Private::gInteractSuite->interactGetPropertySet(handle, &propHandle);
-    if (stat == kOfxStatErrUnsupported) { OFX::Log::print("Unsupported: 1 "); } throwSuiteStatusException(stat);
+    throwSuiteStatusException(stat);
     PropertySet interactProperties(propHandle);
 
     // get the effect handle from this handle
@@ -96,7 +96,7 @@ namespace OFX {
     // get the properties set on this handle
     OfxPropertySetHandle propHandle;
     OfxStatus stat = OFX::Private::gInteractSuite->interactGetPropertySet(handle, &propHandle);
-    if (stat == kOfxStatErrUnsupported) { OFX::Log::print("Unsupported: 2 "); } throwSuiteStatusException(stat);
+    throwSuiteStatusException(stat);
     _interactProperties.propSetHandle(propHandle);
 
     // set othe instance data on the property handle to point to this interact
@@ -160,7 +160,7 @@ namespace OFX {
     Interact::requestRedraw(void) const
   {
     OfxStatus stat = OFX::Private::gInteractSuite->interactRedraw(_interactHandle);
-    if (stat == kOfxStatErrUnsupported) { OFX::Log::print("Unsupported: 3 "); } throwSuiteStatusException(stat);
+    throwSuiteStatusException(stat);
   }
 
   /** @brief Swap a buffer in the case of a double bufferred interact, this is possibly a silly one */
@@ -168,7 +168,7 @@ namespace OFX {
     Interact::swapBuffers(void) const
   {
     OfxStatus stat = OFX::Private::gInteractSuite->interactSwapBuffers(_interactHandle);
-    if (stat == kOfxStatErrUnsupported) { OFX::Log::print("Unsupported: 4 "); } throwSuiteStatusException(stat);
+    throwSuiteStatusException(stat);
   }
 
   /** @brief Set a param that the interact should be redrawn on if its value changes */
@@ -425,7 +425,7 @@ namespace OFX {
       // get the prop set on the handle
       OfxPropertySetHandle propHandle;
       OfxStatus stat = OFX::Private::gInteractSuite->interactGetPropertySet(handle, &propHandle);
-      if (stat == kOfxStatErrUnsupported) { OFX::Log::print("Unsupported: 5 "); } throwSuiteStatusException(stat);
+      throwSuiteStatusException(stat);
 
       // make our wrapper object
       PropertySet props(propHandle);
@@ -546,7 +546,7 @@ namespace OFX {
         if (action == kOfxActionDescribe) {
           OfxPropertySetHandle propHandle;
           OfxStatus stat = OFX::Private::gInteractSuite->interactGetPropertySet(handle, &propHandle);
-          if (stat == kOfxStatErrUnsupported) { OFX::Log::print("Unsupported: 6 "); } throwSuiteStatusException(stat);
+          throwSuiteStatusException(stat);
           PropertySet interactProperties(propHandle);
           desc.setPropertySet(&interactProperties);
           desc.describe();

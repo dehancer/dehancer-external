@@ -1088,7 +1088,7 @@ namespace OFX {
       OfxPropertySetHandle props;
       OfxStatus stat = OFX::Private::gParamSuite->paramSetGetPropertySet(h, &props);
       _paramSetProps.propSetHandle(props);
-      if (stat == kOfxStatErrUnsupported) { OFX::Log::print("Unsupported: 24"); } throwSuiteStatusException(stat);
+      throwSuiteStatusException(stat);
     }
     else {
       _paramSetProps.propSetHandle(0);
@@ -1133,7 +1133,7 @@ namespace OFX {
       OFX::Log::print("kOfxStatErrUnknown, name %s type %s", name.c_str(), mapParamTypeEnumToString(paramType));
     }
 #endif
-    if (stat == kOfxStatErrUnsupported) { OFX::Log::print("Unsupported: 25"); } throwSuiteStatusException(stat);
+    throwSuiteStatusException(stat);
   }
 
   /** @brief if a param has been defined in this set, go find it */
@@ -1301,7 +1301,7 @@ namespace OFX {
     // fetch our property handle
     OfxPropertySetHandle propHandle;
     OfxStatus stat = OFX::Private::gParamSuite->paramGetPropertySet(handle, &propHandle);
-    if (stat == kOfxStatErrUnsupported) { OFX::Log::print("Unsupported: 26"); } throwSuiteStatusException(stat);
+    throwSuiteStatusException(stat);
     _paramProps.propSetHandle(propHandle);
 
     // and validate the properties
@@ -1495,7 +1495,7 @@ namespace OFX {
     if(!OFX::Private::gParamSuite->paramGetNumKeys) throwHostMissingSuiteException("paramGetNumKeys");
     unsigned int v = 0;
     OfxStatus stat = OFX::Private::gParamSuite->paramGetNumKeys(_paramHandle, &v);
-    if (stat == kOfxStatErrUnsupported) { OFX::Log::print("Unsupported: 27"); } throwSuiteStatusException(stat);
+    throwSuiteStatusException(stat);
     return v;
   }
 
@@ -1509,7 +1509,7 @@ namespace OFX {
 
     // oops?
     if(stat == kOfxStatFailed) throw std::out_of_range("ValueParam::getKeyTime key index out of range");
-    if (stat == kOfxStatErrUnsupported) { OFX::Log::print("Unsupported: 28"); } throwSuiteStatusException(stat);
+    throwSuiteStatusException(stat);
     return v;
   }
 
@@ -1529,7 +1529,7 @@ namespace OFX {
 
     // oops?
     if(stat == kOfxStatFailed) return -1; // if search failed, return -1
-    if (stat == kOfxStatErrUnsupported) { OFX::Log::print("Unsupported: 29"); } throwSuiteStatusException(stat);
+    throwSuiteStatusException(stat);
     return v;
   }
 
@@ -1540,7 +1540,7 @@ namespace OFX {
     if(!OFX::Private::gParamSuite->paramDeleteKey) throwHostMissingSuiteException("paramDeleteKey");
     OfxStatus stat = OFX::Private::gParamSuite->paramDeleteKey(_paramHandle, time);
     if(stat == kOfxStatFailed) return; // if no key at time, fail quietly
-    if (stat == kOfxStatErrUnsupported) { OFX::Log::print("Unsupported: 30"); } throwSuiteStatusException(stat);
+    throwSuiteStatusException(stat);
   }
 
   /** @brief delete all the keys */
@@ -1549,7 +1549,7 @@ namespace OFX {
   {
     if(!OFX::Private::gParamSuite->paramDeleteAllKeys) throwHostMissingSuiteException("paramDeleteAllKeys");
     OfxStatus stat = OFX::Private::gParamSuite->paramDeleteAllKeys(_paramHandle);
-    if (stat == kOfxStatErrUnsupported) { OFX::Log::print("Unsupported: 31"); } throwSuiteStatusException(stat);
+    throwSuiteStatusException(stat);
   }
 
   /** @brief copy parameter from another, including any animation etc... */
@@ -1557,7 +1557,7 @@ namespace OFX {
   {
     if(!OFX::Private::gParamSuite->paramCopy) throwHostMissingSuiteException("paramCopy");
     OfxStatus stat = OFX::Private::gParamSuite->paramCopy(_paramHandle, from._paramHandle, dstOffset, frameRange);
-    if (stat == kOfxStatErrUnsupported) { OFX::Log::print("Unsupported: 32"); } throwSuiteStatusException(stat);
+    throwSuiteStatusException(stat);
   }
 
   ////////////////////////////////////////////////////////////////////////////////
@@ -1613,21 +1613,21 @@ namespace OFX {
   void IntParam::getValue(int &v)
   {
     OfxStatus stat = OFX::Private::gParamSuite->paramGetValue(_paramHandle, &v);
-    if (stat == kOfxStatErrUnsupported) { OFX::Log::print("Unsupported: 33"); } throwSuiteStatusException(stat);
+    throwSuiteStatusException(stat);
   }
 
   /** @brief get the value at a time */
   void IntParam::getValueAtTime(double t, int &v)
   {
     OfxStatus stat = OFX::Private::gParamSuite->paramGetValueAtTime(_paramHandle, t, &v);
-    if (stat == kOfxStatErrUnsupported) { OFX::Log::print("Unsupported: 34"); } throwSuiteStatusException(stat);
+    throwSuiteStatusException(stat);
   }
 
   /** @brief set value */
   void IntParam::setValue(int v)
   {
     OfxStatus stat = OFX::Private::gParamSuite->paramSetValue(_paramHandle, v);
-    if (stat == kOfxStatErrUnsupported) { OFX::Log::print("Unsupported: 35"); } throwSuiteStatusException(stat);
+    throwSuiteStatusException(stat);
   }
 
   /** @brief set the value at a time, implicitly adds a keyframe */
@@ -1635,7 +1635,7 @@ namespace OFX {
   {
     if(!OFX::Private::gParamSuite->paramSetValueAtTime) throwHostMissingSuiteException("paramSetValueAtTime");
     OfxStatus stat = OFX::Private::gParamSuite->paramSetValueAtTime(_paramHandle, t, v);
-    if (stat == kOfxStatErrUnsupported) { OFX::Log::print("Unsupported: 36"); } throwSuiteStatusException(stat);
+    throwSuiteStatusException(stat);
   }
 
   ////////////////////////////////////////////////////////////////////////////////
@@ -1710,21 +1710,21 @@ namespace OFX {
   void Int2DParam::getValue(int &x, int &y)
   {
     OfxStatus stat = OFX::Private::gParamSuite->paramGetValue(_paramHandle, &x, &y);
-    if (stat == kOfxStatErrUnsupported) { OFX::Log::print("Unsupported: 37"); } throwSuiteStatusException(stat);
+    throwSuiteStatusException(stat);
   }
 
   /** @brief get the value at a time */
   void Int2DParam::getValueAtTime(double t, int &x, int &y)
   {
     OfxStatus stat = OFX::Private::gParamSuite->paramGetValueAtTime(_paramHandle, t, &x, &y);
-    if (stat == kOfxStatErrUnsupported) { OFX::Log::print("Unsupported: 38"); } throwSuiteStatusException(stat);
+    throwSuiteStatusException(stat);
   }
 
   /** @brief set value */
   void Int2DParam::setValue(int x, int y)
   {
     OfxStatus stat = OFX::Private::gParamSuite->paramSetValue(_paramHandle, x, y);
-    if (stat == kOfxStatErrUnsupported) { OFX::Log::print("Unsupported: 39"); } throwSuiteStatusException(stat);
+    throwSuiteStatusException(stat);
   }
 
   /** @brief set the value at a time, implicitly adds a keyframe */
@@ -1732,7 +1732,7 @@ namespace OFX {
   {
     if(!OFX::Private::gParamSuite->paramSetValueAtTime) throwHostMissingSuiteException("paramSetValueAtTime");
     OfxStatus stat = OFX::Private::gParamSuite->paramSetValueAtTime(_paramHandle, t, x, y);
-    if (stat == kOfxStatErrUnsupported) { OFX::Log::print("Unsupported: 40"); } throwSuiteStatusException(stat);
+    throwSuiteStatusException(stat);
   }
 
 
@@ -1818,21 +1818,21 @@ namespace OFX {
   void Int3DParam::getValue(int &x, int &y, int &z)
   {
     OfxStatus stat = OFX::Private::gParamSuite->paramGetValue(_paramHandle, &x, &y, &z);
-    if (stat == kOfxStatErrUnsupported) { OFX::Log::print("Unsupported: 41"); } throwSuiteStatusException(stat);
+    throwSuiteStatusException(stat);
   }
 
   /** @brief get the value at a time */
   void Int3DParam::getValueAtTime(double t, int &x, int &y, int &z)
   {
     OfxStatus stat = OFX::Private::gParamSuite->paramGetValueAtTime(_paramHandle, t, &x, &y, &z);
-    if (stat == kOfxStatErrUnsupported) { OFX::Log::print("Unsupported: 42"); } throwSuiteStatusException(stat);
+    throwSuiteStatusException(stat);
   }
 
   /** @brief set value */
   void Int3DParam::setValue(int x, int y, int z)
   {
     OfxStatus stat = OFX::Private::gParamSuite->paramSetValue(_paramHandle, x, y, z);
-    if (stat == kOfxStatErrUnsupported) { OFX::Log::print("Unsupported: 43"); } throwSuiteStatusException(stat);
+    throwSuiteStatusException(stat);
   }
 
   /** @brief set the value at a time, implicitly adds a keyframe */
@@ -1840,7 +1840,7 @@ namespace OFX {
   {
     if(!OFX::Private::gParamSuite->paramSetValueAtTime) throwHostMissingSuiteException("paramSetValueAtTime");
     OfxStatus stat = OFX::Private::gParamSuite->paramSetValueAtTime(_paramHandle, t, x, y, z);
-    if (stat == kOfxStatErrUnsupported) { OFX::Log::print("Unsupported: 44"); } throwSuiteStatusException(stat);
+    throwSuiteStatusException(stat);
   }
 
   ////////////////////////////////////////////////////////////////////////////////
@@ -1985,21 +1985,21 @@ namespace OFX {
   void DoubleParam::getValue(double &v)
   {
     OfxStatus stat = OFX::Private::gParamSuite->paramGetValue(_paramHandle, &v);
-    if (stat == kOfxStatErrUnsupported) { OFX::Log::print("Unsupported: 45"); } throwSuiteStatusException(stat);
+    throwSuiteStatusException(stat);
   }
 
   /** @brief get the value at a time */
   void DoubleParam::getValueAtTime(double t, double &v)
   {
     OfxStatus stat = OFX::Private::gParamSuite->paramGetValueAtTime(_paramHandle, t, &v);
-    if (stat == kOfxStatErrUnsupported) { OFX::Log::print("Unsupported: 46"); } throwSuiteStatusException(stat);
+    throwSuiteStatusException(stat);
   }
 
   /** @brief set value */
   void DoubleParam::setValue(double v)
   {
     OfxStatus stat = OFX::Private::gParamSuite->paramSetValue(_paramHandle, v);
-    if (stat == kOfxStatErrUnsupported) { OFX::Log::print("Unsupported: 47"); } throwSuiteStatusException(stat);
+    throwSuiteStatusException(stat);
   }
 
   /** @brief set the value at a time, implicitly adds a keyframe */
@@ -2007,7 +2007,7 @@ namespace OFX {
   {
     if(!OFX::Private::gParamSuite->paramSetValueAtTime) throwHostMissingSuiteException("paramSetValueAtTime");
     OfxStatus stat = OFX::Private::gParamSuite->paramSetValueAtTime(_paramHandle, t, v);
-    if (stat == kOfxStatErrUnsupported) { OFX::Log::print("Unsupported: 48"); } throwSuiteStatusException(stat);
+    throwSuiteStatusException(stat);
   }
 
   /** @brief get the value at a time */
@@ -2015,7 +2015,7 @@ namespace OFX {
   {
     if(!OFX::Private::gParamSuite->paramGetDerivative) throwHostMissingSuiteException("paramGetDerivative");
     OfxStatus stat = OFX::Private::gParamSuite->paramGetDerivative(_paramHandle, t, &v);
-    if (stat == kOfxStatErrUnsupported) { OFX::Log::print("Unsupported: 49"); } throwSuiteStatusException(stat);
+    throwSuiteStatusException(stat);
   }
 
   /** @brief get the value at a time */
@@ -2023,7 +2023,7 @@ namespace OFX {
   {
     if(!OFX::Private::gParamSuite->paramGetIntegral) throwHostMissingSuiteException("paramGetIntegral");
     OfxStatus stat = OFX::Private::gParamSuite->paramGetIntegral(_paramHandle, t1, t2, &v);
-    if (stat == kOfxStatErrUnsupported) { OFX::Log::print("Unsupported: 50"); } throwSuiteStatusException(stat);
+    throwSuiteStatusException(stat);
   }
 
   ////////////////////////////////////////////////////////////////////////////////
@@ -2098,21 +2098,21 @@ namespace OFX {
   void Double2DParam::getValue(double &x, double &y)
   {
     OfxStatus stat = OFX::Private::gParamSuite->paramGetValue(_paramHandle, &x, &y);
-    if (stat == kOfxStatErrUnsupported) { OFX::Log::print("Unsupported: 51"); } throwSuiteStatusException(stat);
+    throwSuiteStatusException(stat);
   }
 
   /** @brief get the value at a time */
   void Double2DParam::getValueAtTime(double t, double &x, double &y)
   {
     OfxStatus stat = OFX::Private::gParamSuite->paramGetValueAtTime(_paramHandle, t, &x, &y);
-    if (stat == kOfxStatErrUnsupported) { OFX::Log::print("Unsupported: 52"); } throwSuiteStatusException(stat);
+    throwSuiteStatusException(stat);
   }
 
   /** @brief set value */
   void Double2DParam::setValue(double x, double y)
   {
     OfxStatus stat = OFX::Private::gParamSuite->paramSetValue(_paramHandle, x, y);
-    if (stat == kOfxStatErrUnsupported) { OFX::Log::print("Unsupported: 53"); } throwSuiteStatusException(stat);
+    throwSuiteStatusException(stat);
   }
 
   /** @brief set the value at a time, implicitly adds a keyframe */
@@ -2120,7 +2120,7 @@ namespace OFX {
   {
     if(!OFX::Private::gParamSuite->paramSetValueAtTime) throwHostMissingSuiteException("paramSetValueAtTime");
     OfxStatus stat = OFX::Private::gParamSuite->paramSetValueAtTime(_paramHandle, t, x, y);
-    if (stat == kOfxStatErrUnsupported) { OFX::Log::print("Unsupported: 54"); } throwSuiteStatusException(stat);
+    throwSuiteStatusException(stat);
   }
 
   /** @brief get the value at a time */
@@ -2128,7 +2128,7 @@ namespace OFX {
   {
     if(!OFX::Private::gParamSuite->paramGetDerivative) throwHostMissingSuiteException("paramGetDerivative");
     OfxStatus stat = OFX::Private::gParamSuite->paramGetDerivative(_paramHandle, t, &x, &y);
-    if (stat == kOfxStatErrUnsupported) { OFX::Log::print("Unsupported: 55"); } throwSuiteStatusException(stat);
+    throwSuiteStatusException(stat);
   }
 
   /** @brief get the value at a time */
@@ -2136,7 +2136,7 @@ namespace OFX {
   {
     if(!OFX::Private::gParamSuite->paramGetIntegral) throwHostMissingSuiteException("paramGetIntegral");
     OfxStatus stat = OFX::Private::gParamSuite->paramGetIntegral(_paramHandle, t1, t2, &x, &y);
-    if (stat == kOfxStatErrUnsupported) { OFX::Log::print("Unsupported: 56"); } throwSuiteStatusException(stat);
+    throwSuiteStatusException(stat);
   }
 
 
@@ -2222,21 +2222,21 @@ namespace OFX {
   void Double3DParam::getValue(double &x, double &y, double &z)
   {
     OfxStatus stat = OFX::Private::gParamSuite->paramGetValue(_paramHandle, &x, &y, &z);
-    if (stat == kOfxStatErrUnsupported) { OFX::Log::print("Unsupported: 57"); } throwSuiteStatusException(stat);
+    throwSuiteStatusException(stat);
   }
 
   /** @brief get the value at a time */
   void Double3DParam::getValueAtTime(double t, double &x, double &y, double &z)
   {
     OfxStatus stat = OFX::Private::gParamSuite->paramGetValueAtTime(_paramHandle, t, &x, &y, &z);
-    if (stat == kOfxStatErrUnsupported) { OFX::Log::print("Unsupported: 58"); } throwSuiteStatusException(stat);
+    throwSuiteStatusException(stat);
   }
 
   /** @brief set value */
   void Double3DParam::setValue(double x, double y, double z)
   {
     OfxStatus stat = OFX::Private::gParamSuite->paramSetValue(_paramHandle, x, y, z);
-    if (stat == kOfxStatErrUnsupported) { OFX::Log::print("Unsupported: 59"); } throwSuiteStatusException(stat);
+    throwSuiteStatusException(stat);
   }
 
   /** @brief set the value at a time, implicitly adds a keyframe */
@@ -2244,7 +2244,7 @@ namespace OFX {
   {
     if(!OFX::Private::gParamSuite->paramSetValueAtTime) throwHostMissingSuiteException("paramSetValueAtTime");
     OfxStatus stat = OFX::Private::gParamSuite->paramSetValueAtTime(_paramHandle, t, x, y, z);
-    if (stat == kOfxStatErrUnsupported) { OFX::Log::print("Unsupported: 60"); } throwSuiteStatusException(stat);
+    throwSuiteStatusException(stat);
   }
 
   /** @brief get the value at a time */
@@ -2252,7 +2252,7 @@ namespace OFX {
   {
     if(!OFX::Private::gParamSuite->paramGetDerivative) throwHostMissingSuiteException("paramGetDerivative");
     OfxStatus stat = OFX::Private::gParamSuite->paramGetDerivative(_paramHandle, t, &x, &y, &z);
-    if (stat == kOfxStatErrUnsupported) { OFX::Log::print("Unsupported: 61"); } throwSuiteStatusException(stat);
+    throwSuiteStatusException(stat);
   }
 
   /** @brief get the value at a time */
@@ -2260,7 +2260,7 @@ namespace OFX {
   {
     if(!OFX::Private::gParamSuite->paramGetIntegral) throwHostMissingSuiteException("paramGetIntegral");
     OfxStatus stat = OFX::Private::gParamSuite->paramGetIntegral(_paramHandle, t1, t2, &x, &y, &z);
-    if (stat == kOfxStatErrUnsupported) { OFX::Log::print("Unsupported: 62"); } throwSuiteStatusException(stat);
+    throwSuiteStatusException(stat);
   }
   ////////////////////////////////////////////////////////////////////////////////
   // RGB colour param
@@ -2291,21 +2291,21 @@ namespace OFX {
   void RGBParam::getValue(double &r, double &g, double &b)
   {
     OfxStatus stat = OFX::Private::gParamSuite->paramGetValue(_paramHandle, &r, &g, &b);
-    if (stat == kOfxStatErrUnsupported) { OFX::Log::print("Unsupported: 63"); } throwSuiteStatusException(stat);
+    throwSuiteStatusException(stat);
   }
 
   /** @brief get the value at a time */
   void RGBParam::getValueAtTime(double t, double &r, double &g, double &b)
   {
     OfxStatus stat = OFX::Private::gParamSuite->paramGetValueAtTime(_paramHandle, t, &r, &g, &b);
-    if (stat == kOfxStatErrUnsupported) { OFX::Log::print("Unsupported: 64"); } throwSuiteStatusException(stat);
+    throwSuiteStatusException(stat);
   }
 
   /** @brief set value */
   void RGBParam::setValue(double r, double g, double b)
   {
     OfxStatus stat = OFX::Private::gParamSuite->paramSetValue(_paramHandle, r, g, b);
-    if (stat == kOfxStatErrUnsupported) { OFX::Log::print("Unsupported: 65"); } throwSuiteStatusException(stat);
+    throwSuiteStatusException(stat);
   }
 
   /** @brief set the value at a time, implicitly adds a keyframe */
@@ -2313,7 +2313,7 @@ namespace OFX {
   {
     if(!OFX::Private::gParamSuite->paramSetValueAtTime) throwHostMissingSuiteException("paramSetValueAtTime");
     OfxStatus stat = OFX::Private::gParamSuite->paramSetValueAtTime(_paramHandle, t, r, g, b);
-    if (stat == kOfxStatErrUnsupported) { OFX::Log::print("Unsupported: 66"); } throwSuiteStatusException(stat);
+    throwSuiteStatusException(stat);
   }
 
   ////////////////////////////////////////////////////////////////////////////////
@@ -2347,21 +2347,21 @@ namespace OFX {
   void RGBAParam::getValue(double &r, double &g, double &b, double &a)
   {
     OfxStatus stat = OFX::Private::gParamSuite->paramGetValue(_paramHandle, &r, &g, &b, &a);
-    if (stat == kOfxStatErrUnsupported) { OFX::Log::print("Unsupported: 67"); } throwSuiteStatusException(stat);
+    throwSuiteStatusException(stat);
   }
 
   /** @brief get the value at a time */
   void RGBAParam::getValueAtTime(double t, double &r, double &g, double &b, double &a)
   {
     OfxStatus stat = OFX::Private::gParamSuite->paramGetValueAtTime(_paramHandle, t, &r, &g, &b, &a);
-    if (stat == kOfxStatErrUnsupported) { OFX::Log::print("Unsupported: 68"); } throwSuiteStatusException(stat);
+    throwSuiteStatusException(stat);
   }
 
   /** @brief set value */
   void RGBAParam::setValue(double r, double g, double b, double a)
   {
     OfxStatus stat = OFX::Private::gParamSuite->paramSetValue(_paramHandle, r, g, b, a);
-    if (stat == kOfxStatErrUnsupported) { OFX::Log::print("Unsupported: 69"); } throwSuiteStatusException(stat);
+    throwSuiteStatusException(stat);
   }
 
   /** @brief set the value at a time, implicitly adds a keyframe */
@@ -2369,7 +2369,7 @@ namespace OFX {
   {
     if(!OFX::Private::gParamSuite->paramSetValueAtTime) throwHostMissingSuiteException("paramSetValueAtTime");
     OfxStatus stat = OFX::Private::gParamSuite->paramSetValueAtTime(_paramHandle, t, r, g, b, a);
-    if (stat == kOfxStatErrUnsupported) { OFX::Log::print("Unsupported: 70"); } throwSuiteStatusException(stat);
+    throwSuiteStatusException(stat);
   }
 
   ////////////////////////////////////////////////////////////////////////////////
@@ -2398,7 +2398,7 @@ namespace OFX {
   {
     char *cStr;
     OfxStatus stat = OFX::Private::gParamSuite->paramGetValue(_paramHandle, &cStr);
-    if (stat == kOfxStatErrUnsupported) { OFX::Log::print("Unsupported: 71"); } throwSuiteStatusException(stat);
+    throwSuiteStatusException(stat);
     v = cStr;
   }
 
@@ -2407,7 +2407,7 @@ namespace OFX {
   {
     char *cStr;
     OfxStatus stat = OFX::Private::gParamSuite->paramGetValueAtTime(_paramHandle, t, &cStr);
-    if (stat == kOfxStatErrUnsupported) { OFX::Log::print("Unsupported: 72"); } throwSuiteStatusException(stat);
+    throwSuiteStatusException(stat);
     v = cStr;
   }
 
@@ -2415,7 +2415,7 @@ namespace OFX {
   void StringParam::setValue(const std::string &v)
   {
     OfxStatus stat = OFX::Private::gParamSuite->paramSetValue(_paramHandle, v.c_str());
-    if (stat == kOfxStatErrUnsupported) { OFX::Log::print("Unsupported: 73"); } throwSuiteStatusException(stat);
+    throwSuiteStatusException(stat);
   }
 
   /** @brief set the value at a time, implicitly adds a keyframe */
@@ -2423,7 +2423,7 @@ namespace OFX {
   {
     if(!OFX::Private::gParamSuite->paramSetValueAtTime) throwHostMissingSuiteException("paramSetValueAtTime");
     OfxStatus stat = OFX::Private::gParamSuite->paramSetValueAtTime(_paramHandle, t, v.c_str());
-    if (stat == kOfxStatErrUnsupported) { OFX::Log::print("Unsupported: 74"); } throwSuiteStatusException(stat);
+    throwSuiteStatusException(stat);
   }
 
   ////////////////////////////////////////////////////////////////////////////////
@@ -2452,7 +2452,7 @@ namespace OFX {
   {
     int iVal;
     OfxStatus stat = OFX::Private::gParamSuite->paramGetValue(_paramHandle, &iVal);
-    if (stat == kOfxStatErrUnsupported) { OFX::Log::print("Unsupported: 75"); } throwSuiteStatusException(stat);
+    throwSuiteStatusException(stat);
     v = iVal != 0;
   }
 
@@ -2461,7 +2461,7 @@ namespace OFX {
   {
     int iVal;
     OfxStatus stat = OFX::Private::gParamSuite->paramGetValueAtTime(_paramHandle, t, &iVal);
-    if (stat == kOfxStatErrUnsupported) { OFX::Log::print("Unsupported: 76"); } throwSuiteStatusException(stat);
+    throwSuiteStatusException(stat);
     v = iVal != 0;
   }
 
@@ -2470,7 +2470,7 @@ namespace OFX {
   {
     int iVal = v;
     OfxStatus stat = OFX::Private::gParamSuite->paramSetValue(_paramHandle, iVal);
-    if (stat == kOfxStatErrUnsupported) { OFX::Log::print("Unsupported: 77"); } throwSuiteStatusException(stat);
+    throwSuiteStatusException(stat);
   }
 
   /** @brief set the value at a time, implicitly adds a keyframe */
@@ -2479,7 +2479,7 @@ namespace OFX {
     if(!OFX::Private::gParamSuite->paramSetValueAtTime) throwHostMissingSuiteException("paramSetValueAtTime");
     int iVal = v;
     OfxStatus stat = OFX::Private::gParamSuite->paramSetValueAtTime(_paramHandle, t, iVal);
-    if (stat == kOfxStatErrUnsupported) { OFX::Log::print("Unsupported: 78"); } throwSuiteStatusException(stat);
+    throwSuiteStatusException(stat);
   }
 
 
@@ -2508,21 +2508,21 @@ namespace OFX {
   void ChoiceParam::getValue(int &v)
   {
     OfxStatus stat = OFX::Private::gParamSuite->paramGetValue(_paramHandle, &v);
-    if (stat == kOfxStatErrUnsupported) { OFX::Log::print("Unsupported: 79"); } throwSuiteStatusException(stat);
+    throwSuiteStatusException(stat);
   }
 
   /** @brief get the value at a time */
   void ChoiceParam::getValueAtTime(double t, int &v)
   {
     OfxStatus stat = OFX::Private::gParamSuite->paramGetValueAtTime(_paramHandle, t, &v);
-    if (stat == kOfxStatErrUnsupported) { OFX::Log::print("Unsupported: 80"); } throwSuiteStatusException(stat);
+    throwSuiteStatusException(stat);
   }
 
   /** @brief set value */
   void ChoiceParam::setValue(int v)
   {
     OfxStatus stat = OFX::Private::gParamSuite->paramSetValue(_paramHandle, v);
-    if (stat == kOfxStatErrUnsupported) { OFX::Log::print("Unsupported: 81"); } throwSuiteStatusException(stat);
+    throwSuiteStatusException(stat);
   }
 
   /** @brief set the value at a time, implicitly adds a keyframe */
@@ -2530,7 +2530,7 @@ namespace OFX {
   {
     if(!OFX::Private::gParamSuite->paramSetValueAtTime) throwHostMissingSuiteException("paramSetValueAtTime");
     OfxStatus stat = OFX::Private::gParamSuite->paramSetValueAtTime(_paramHandle, t, v);
-    if (stat == kOfxStatErrUnsupported) { OFX::Log::print("Unsupported: 82"); } throwSuiteStatusException(stat);
+    throwSuiteStatusException(stat);
   }
 
   /** @brief how many options do we have */
@@ -2858,7 +2858,7 @@ namespace OFX {
   {
     char *cStr;
     OfxStatus stat = OFX::Private::gParamSuite->paramGetValue(_paramHandle, &cStr);
-    if (stat == kOfxStatErrUnsupported) { OFX::Log::print("Unsupported: 83"); } throwSuiteStatusException(stat);
+    throwSuiteStatusException(stat);
     v = cStr;
   }
 
@@ -2867,7 +2867,7 @@ namespace OFX {
   {
     char *cStr;
     OfxStatus stat = OFX::Private::gParamSuite->paramGetValueAtTime(_paramHandle, t, &cStr);
-    if (stat == kOfxStatErrUnsupported) { OFX::Log::print("Unsupported: 84"); } throwSuiteStatusException(stat);
+    throwSuiteStatusException(stat);
     v = cStr;
   }
 
@@ -2875,14 +2875,14 @@ namespace OFX {
   void CustomParam::setValue(const std::string &v)
   {
     OfxStatus stat = OFX::Private::gParamSuite->paramSetValue(_paramHandle, v.c_str());
-    if (stat == kOfxStatErrUnsupported) { OFX::Log::print("Unsupported: 85"); } throwSuiteStatusException(stat);
+    throwSuiteStatusException(stat);
   }
 
   /** @brief set value */
   void CustomParam::setValue(const char* str)
   {
     OfxStatus stat = OFX::Private::gParamSuite->paramSetValue(_paramHandle, str);
-    if (stat == kOfxStatErrUnsupported) { OFX::Log::print("Unsupported: 86"); } throwSuiteStatusException(stat);
+    throwSuiteStatusException(stat);
   }
 
   /** @brief set the value at a time, implicitly adds a keyframe */
@@ -2890,7 +2890,7 @@ namespace OFX {
   {
     if(!OFX::Private::gParamSuite->paramSetValueAtTime) throwHostMissingSuiteException("paramSetValueAtTime");
     OfxStatus stat = OFX::Private::gParamSuite->paramSetValueAtTime(_paramHandle, t, v.c_str());
-    if (stat == kOfxStatErrUnsupported) { OFX::Log::print("Unsupported: 87"); } throwSuiteStatusException(stat);
+    throwSuiteStatusException(stat);
   }
 
   ////////////////////////////////////////////////////////////////////////////////
@@ -2952,7 +2952,7 @@ namespace OFX {
                                                                                        time,
                                                                                        parametricPosition,
                                                                                        &returnValue);
-    if (stat == kOfxStatErrUnsupported) { OFX::Log::print("Unsupported: 88"); } throwSuiteStatusException(stat);
+    throwSuiteStatusException(stat);
     return returnValue;
   }
 
@@ -2971,7 +2971,7 @@ namespace OFX {
                                                                                                 curveIndex,
                                                                                                 time,
                                                                                                 &returnValue);
-    if (stat == kOfxStatErrUnsupported) { OFX::Log::print("Unsupported: 89"); } throwSuiteStatusException(stat);
+    throwSuiteStatusException(stat);
     return returnValue;
   }
 
@@ -2994,7 +2994,7 @@ namespace OFX {
                                                                                                  nthCtl,
                                                                                                  &returnValue.first,
                                                                                                  &returnValue.second);
-    if (stat == kOfxStatErrUnsupported) { OFX::Log::print("Unsupported: 90"); } throwSuiteStatusException(stat);
+    throwSuiteStatusException(stat);
     return returnValue;
   }
 
@@ -3033,7 +3033,7 @@ namespace OFX {
                                                                                                  key,
                                                                                                  value,
                                                                                                  addAnimationKey);
-    if (stat == kOfxStatErrUnsupported) { OFX::Log::print("Unsupported: 91"); } throwSuiteStatusException(stat);
+    throwSuiteStatusException(stat);
   }
 
   void ParametricParam::setNthControlPoints(const int curveIndex,
@@ -3071,7 +3071,7 @@ namespace OFX {
                                          const bool addAnimationKey)
   {
     OfxStatus stat = OFX::Private::gParametricParameterSuite->parametricParamAddControlPoint(_paramHandle, curveIndex, time, key, value, addAnimationKey);
-    if (stat == kOfxStatErrUnsupported) { OFX::Log::print("Unsupported: 92"); } throwSuiteStatusException(stat);
+    throwSuiteStatusException(stat);
   }
 
   /** @brief Deletes the nth control point from a parametric param.
@@ -3083,7 +3083,7 @@ namespace OFX {
                                             const int nthCtl)
   {
     OfxStatus stat = OFX::Private::gParametricParameterSuite->parametricParamDeleteControlPoint(_paramHandle, curveIndex, nthCtl);
-    if (stat == kOfxStatErrUnsupported) { OFX::Log::print("Unsupported: 93"); } throwSuiteStatusException(stat);
+    throwSuiteStatusException(stat);
   }
 
   /** @brief Delete all curve control points on the given param.
@@ -3093,7 +3093,7 @@ namespace OFX {
   void ParametricParam::deleteControlPoint(const int curveIndex)
   {
     OfxStatus stat = OFX::Private::gParametricParameterSuite->parametricParamDeleteAllControlPoints(_paramHandle, curveIndex);
-    if (stat == kOfxStatErrUnsupported) { OFX::Log::print("Unsupported: 94"); } throwSuiteStatusException(stat);
+    throwSuiteStatusException(stat);
   }
 
   ////////////////////////////////////////////////////////////////////////////////
@@ -3148,7 +3148,7 @@ namespace OFX {
 
     // make sure it is of our type
     std::string paramTypeStr = props.propGetString(kOfxParamPropType);
-    //OFX::Log::print("propGetString %s", paramTypeStr.c_str());
+    OFX::Log::print("propGetString %s", paramTypeStr.c_str());
 #ifdef DEHANCER_HOST_VEGAS
     // we do not have eStrChoiceParam and wrap it over eChoiceParam for Vegas
     if (paramType == eStrChoiceParam)
