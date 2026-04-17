@@ -1850,16 +1850,10 @@ namespace OFX {
         {
             paramPtr = NULL;
 
-            if (paramType == eStrChoiceParam) {
-              OFX::Log::print("Fetching param '%s'", name.c_str());
-            }
-
             // have we made it already in this param set and is it an int?
             if(Param *param  = findPreviouslyFetchedParam(name)) {
-                OFX::Log::print("    param found");
                 if(param->getType() == paramType) {
                     paramPtr = (T *) param; // could be a dynamic cast here
-                    OFX::Log::print("    param returned");
                 }
                 else
                   throw OFX::Exception::TypeRequest("Fetching param and attempting to return the wrong type");
@@ -1867,12 +1861,10 @@ namespace OFX {
             else {
                 // ok define one and add it in
                 OfxParamHandle paramHandle;
-                OFX::Log::print("Fetching param %s type %d", name.c_str(), paramType);
                 fetchRawParam(name, paramType, paramHandle);
 
                 // make out support descriptor class
                 paramPtr = new T(this, name, paramHandle);
-                OFX::Log::print("    param created, %p", paramPtr);
 
                 // add it to our map of described ones
                 _fetchedParams[name] = paramPtr;

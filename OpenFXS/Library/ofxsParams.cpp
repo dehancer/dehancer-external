@@ -862,7 +862,6 @@ namespace OFX {
   void StrChoiceParamDescriptor::setDefault(const std::string& p_DefaultValue)
   {
     // do nothing, as we do not define the list at this moment
-    OFX::Log::print("Call setDefault for %s", _paramName.c_str());
   }
 
   /** @brief append an option */
@@ -870,7 +869,6 @@ namespace OFX {
   {
     int nCurrentValues = _paramProps.propGetDimension(kOfxParamPropChoiceOption);
     _paramProps.propSetString(kOfxParamPropChoiceOption, p_Option, nCurrentValues);
-    OFX::Log::print("Call appendOption for %s, option %s", _paramName.c_str(), p_Option.c_str());
   }
 
   /** @brief how many options do we have */
@@ -1126,7 +1124,6 @@ namespace OFX {
       paramType = eChoiceParam;
     }
 #endif
-    OFX::Log::print("defineRawParam %s, type=%d", name.c_str(), paramType);
     OfxStatus stat = OFX::Private::gParamSuite->paramDefine(_paramSetHandle, mapParamTypeEnumToString(paramType), name.c_str(), &props);
 #ifdef DEHANCER_HOST_VEGAS
     if (stat == kOfxStatErrUnknown) {
@@ -2681,7 +2678,6 @@ namespace OFX {
   void StrChoiceParam::appendOption(const std::string& p_Enum, const std::string& p_Option)
   {
     int nCurrentValues = _paramProps.propGetDimension(kOfxParamPropChoiceOption);
-    OFX::Log::print("Param %s, adding option %s to %d position, number of strings %d", _paramName.c_str(), p_Option.c_str(), nCurrentValues, m_StringOptions.size());
     _paramProps.propSetString(kOfxParamPropChoiceOption, p_Option, nCurrentValues);
 
     m_StringOptions.push_back(std::make_pair(p_Enum, p_Option));
@@ -3148,7 +3144,6 @@ namespace OFX {
 
     // make sure it is of our type
     std::string paramTypeStr = props.propGetString(kOfxParamPropType);
-    OFX::Log::print("propGetString %s", paramTypeStr.c_str());
 #ifdef DEHANCER_HOST_VEGAS
     // we do not have eStrChoiceParam and wrap it over eChoiceParam for Vegas
     if (paramType == eStrChoiceParam)
