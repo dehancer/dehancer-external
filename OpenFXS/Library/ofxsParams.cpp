@@ -813,7 +813,7 @@ namespace OFX {
 
   ////////////////////////////////////////////////////////////////////////////////
   // string choice param descriptor
-
+#ifndef DEHANCER_HOST_VEGAS  // Vegas uses OFX 1.1 without strchoice
   /** @brief hidden constructor */
   StrChoiceParamDescriptor::StrChoiceParamDescriptor(const std::string& p_Name, OfxPropertySetHandle p_Props)
       : ValueParamDescriptor(p_Name, eStrChoiceParam, p_Props)
@@ -851,7 +851,40 @@ namespace OFX {
       _paramProps.propReset(kOfxParamPropChoiceEnum);
       _paramProps.propReset(kOfxParamPropChoiceOption);
   }
+#else
+  /** @brief hidden constructor */
+  StrChoiceParamDescriptor::StrChoiceParamDescriptor(const std::string& p_Name, OfxPropertySetHandle p_Props)
+      : ValueParamDescriptor(p_Name, eChoiceParam, p_Props)
+  {
+  }
 
+  /** @brief set the default value */
+  void StrChoiceParamDescriptor::setDefault(const std::string& p_DefaultValue)
+  {
+    // do nothing, as we do not define the list at this moment
+  }
+
+  /** @brief append an option */
+  void StrChoiceParamDescriptor::appendOption(const std::string& p_Enum, const std::string& p_Option)
+  {
+    int nCurrentValues = _paramProps.propGetDimension(kOfxParamPropChoiceOption);
+    _paramProps.propSetString(kOfxParamPropChoiceOption, p_Option, nCurrentValues);
+  }
+
+  /** @brief how many options do we have */
+  int StrChoiceParamDescriptor::getNOptions()
+  {
+    const int numOptions = _paramProps.propGetDimension(kOfxParamPropChoiceOption);
+
+    return numOptions;
+  }
+
+  /** @brief clear all the options so as to add some new ones in */
+  void StrChoiceParamDescriptor::resetOptions(void)
+  {
+    _paramProps.propReset(kOfxParamPropChoiceOption);
+  }
+#endif
   ////////////////////////////////////////////////////////////////////////////////
   // string param descriptor
 
@@ -1085,7 +1118,18 @@ namespace OFX {
   /** @brief calls the raw OFX routine to define a param */
   void ParamSetDescriptor::defineRawParam(const std::string &name, ParamTypeEnum paramType, OfxPropertySetHandle &props)
   {
+#ifdef DEHANCER_HOST_VEGAS
+    if (paramType == eStrChoiceParam)
+    {
+      paramType = eChoiceParam;
+    }
+#endif
     OfxStatus stat = OFX::Private::gParamSuite->paramDefine(_paramSetHandle, mapParamTypeEnumToString(paramType), name.c_str(), &props);
+#ifdef DEHANCER_HOST_VEGAS
+    if (stat == kOfxStatErrUnknown) {
+      OFX::Log::print("kOfxStatErrUnknown, name %s type %s", name.c_str(), mapParamTypeEnumToString(paramType));
+    }
+#endif
     throwSuiteStatusException(stat);
   }
 
@@ -2535,7 +2579,7 @@ namespace OFX {
 
   ////////////////////////////////////////////////////////////////////////////////
   // Wraps up a string choice param */
-
+#ifndef DEHANCER_HOST_VEGAS
   /** @brief hidden constructor */
   StrChoiceParam::StrChoiceParam(const ParamSet* p_ParamSet, const std::string& p_Name, OfxParamHandle p_Handle)
       : StringParam(p_ParamSet, p_Name, p_Handle)
@@ -2608,7 +2652,182 @@ namespace OFX {
       _paramProps.propReset(kOfxParamPropChoiceEnum);
       _paramProps.propReset(kOfxParamPropChoiceOption);
   }
+#else
+  /// Vegas does not support StrChoiceParam, realize it over ChoiceParam
+  /** @brief hidden constructor */
+  StrChoiceParam::StrChoiceParam(const ParamSet* p_ParamSet, const std::string& p_Name, OfxParamHandle p_Handle)
+      : ChoiceParam(p_ParamSet, p_Name, p_Handle)
+  {
+      _paramType = eStrChoiceParam;
+  }
 
+  /** @brief how many options do we have */
+  int StrChoiceParam::getNOptions()
+  {
+    int nCurrentValues = _paramProps.propGetDimension(kOfxParamPropChoiceOption);
+    int numOptionsStrChoice = m_StringOptions.size();
+    if (numOptionsStrChoice != nCurrentValues) {
+      OFX::Log::print("Param %s: ChoiceOptions %d, string options %d, choices are not the same", _paramName.c_str(),  nCurrentValues, numOptionsStrChoice);
+      resetOptions();
+      numOptionsStrChoice = 0;
+    }
+    return numOptionsStrChoice;
+  }
+
+  /** @brief add another option */
+  void StrChoiceParam::appendOption(const std::string& p_Enum, const std::string& p_Option)
+  {
+    int nCurrentValues = _paramProps.propGetDimension(kOfxParamPropChoiceOption);
+    _paramProps.propSetString(kOfxParamPropChoiceOption, p_Option, nCurrentValues);
+
+    m_StringOptions.push_back(std::make_pair(p_Enum, p_Option));
+  }
+
+  /** @brief set the string of a specific option */
+  void StrChoiceParam::setOption(const std::string& p_Index, const std::string& p_Option)
+  {
+      int item = 0;
+      for (auto p : m_StringOptions)
+      {
+          if (p.first == p_Index)
+          {
+            _paramProps.propSetString(kOfxParamPropChoiceOption, p_Option, item);
+            m_StringOptions[item].second = p_Option;
+            return;
+          }
+          ++item;
+      }
+
+      throwSuiteStatusException(kOfxStatErrBadIndex);
+  }
+
+  /** @brief get the option value */
+  void StrChoiceParam::getOption(const std::string& p_Index, std::string& p_Option)
+  {
+      int item = 0;
+      for (auto p : m_StringOptions)
+      {
+        if (p.first == p_Index)
+        {
+          p_Option = _paramProps.propGetString(kOfxParamPropChoiceOption, item);
+          assert(P_Option == m_StringOptions[item].second);
+          return;
+        }
+        ++item;
+      }
+
+      throwSuiteStatusException(kOfxStatErrBadIndex);
+  }
+
+  /** @brief set to the default value */
+  void StrChoiceParam::resetOptions()
+  {
+      _paramProps.propReset(kOfxParamPropChoiceOption);
+      m_StringOptions.clear();
+  }
+
+  /** @brief set the default value */
+  void StrChoiceParam::setDefault(const std::string &v)
+  {
+    int item = 0;
+    for (auto p : m_StringOptions)
+    {
+      if (p.first == v)
+      {
+        ChoiceParam::setDefault(item);
+        return;
+      }
+      ++item;
+    }
+    ChoiceParam::setDefault(0);
+
+  }
+
+  /** @brief get the default value */
+  void StrChoiceParam::getDefault(std::string &v)
+  {
+    int item;
+    ChoiceParam::getDefault(item);
+    if (item < m_StringOptions.size())
+    {
+      v = m_StringOptions[item].first;
+    }
+    else
+    {
+      OFX::Log::print("%s.getDefault(), returned index %d out of range %d", _paramName.c_str(), item, m_StringOptions.size());
+      v = "";
+    }
+  }
+
+  /** @brief get value */
+  void StrChoiceParam::getValue(std::string &v)
+  {
+    int item;
+    ChoiceParam::getValue(item);
+    if (item < m_StringOptions.size())
+    {
+      v = m_StringOptions[item].first;
+    }
+    else
+    {
+      OFX::Log::print("%s.getValue(), returned index %d out of range %d", _paramName.c_str(), item, m_StringOptions.size());
+      v = "";
+    }
+  }
+
+  /** @brief get the value at a time */
+  void StrChoiceParam::getValueAtTime(double t, std::string &v)
+  {
+    int item;
+    ChoiceParam::getValueAtTime(t, item);
+    if (item < m_StringOptions.size())
+    {
+      v = m_StringOptions[item].first;
+    }
+    else
+    {
+      OFX::Log::print("%s.getValueAtTime(), returned index %d out of range %d", _paramName.c_str(), item, m_StringOptions.size());
+      v = "";
+    }
+  }
+
+  /** @brief set value */
+  void StrChoiceParam::setValue(const std::string &v)
+  {
+    int item = 0;
+    for (auto p : m_StringOptions)
+    {
+      if (p.first == v)
+      {
+        ChoiceParam::setValue(item);
+        return;
+      }
+      ++item;
+    }
+
+    OFX::Log::print("%s.setValue(), value %s not found", _paramName.c_str(), v.c_str());
+    ChoiceParam::setValue(0);
+  }
+
+  /** @brief set the value at a time, implicitly adds a keyframe */
+  void StrChoiceParam::setValueAtTime(double t, const std::string &v)
+  {
+    int item = 0;
+    for (auto p : m_StringOptions)
+    {
+      if (p.first == v)
+      {
+        ChoiceParam::setValueAtTime(t, item);
+        return;
+      }
+      ++item;
+    }
+
+    OFX::Log::print("%s.setValueAtTime(), value %s not found", _paramName.c_str(), v.c_str());
+    ChoiceParam::setValueAtTime(t, 0);
+  }
+
+#endif
   ////////////////////////////////////////////////////////////////////////////////
   // Wraps up a custom param */
 
@@ -2925,6 +3144,13 @@ namespace OFX {
 
     // make sure it is of our type
     std::string paramTypeStr = props.propGetString(kOfxParamPropType);
+#ifdef DEHANCER_HOST_VEGAS
+    // we do not have eStrChoiceParam and wrap it over eChoiceParam for Vegas
+    if (paramType == eStrChoiceParam)
+    {
+      paramType = eChoiceParam;
+    }
+#endif
     if(paramTypeStr != mapParamTypeEnumToString(paramType)) {
       throw OFX::Exception::TypeRequest("Parameter exists but is of the wrong type");
     }
@@ -2961,9 +3187,11 @@ namespace OFX {
 
     PropertySet props(propHandle);
 
+
     // make sure it is of our type
     std::string paramTypeStr = props.propGetString(kOfxParamPropType);
     ParamTypeEnum t = mapParamTypeStringToEnum(paramTypeStr.c_str());
+    OFX::Log::print("ParamSet::getParam %s type %s", name.c_str(), paramTypeStr.c_str());
     switch(t)
     {
     case eStringParam :

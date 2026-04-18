@@ -785,6 +785,12 @@ namespace OFX {
 
             // have we made it already in this param set and is it of the correct type
             if(ParamDescriptor *param  = findPreviouslyDefinedParam(name)) {
+#ifdef DEHANCER_HOST_VEGAS
+                if (paramType == eStrChoiceParam)
+                {
+                    paramType = eChoiceParam;
+                }
+#endif
                 if(param->getType() == paramType) {
                     paramPtr = (T *) param; // could be a dynamic cast here
                     return true;
@@ -1555,6 +1561,7 @@ namespace OFX {
         void setValueAtTime(double t, int v);
     };
 
+#ifndef DEHANCER_HOST_VEGAS  // Vegas uses OFX 1.1 without strchoice, do workaround
     ////////////////////////////////////////////////////////////////////////////////
     /** @brief Wraps up a string choice param */
     class StrChoiceParam : public StringParam
@@ -1586,7 +1593,63 @@ namespace OFX {
         /** @brief clear all the options so as to add some new ones in */
         void resetOptions();
     };
+#else
+    ////////////////////////////////////////////////////////////////////////////////
+    /** @brief Wraps up a string choice param over choice param (for Vegas using OFX 1.1) */
+    class StrChoiceParam : public ChoiceParam
+    {
+        protected :
+            mDeclareProtectedAssignAndCCBase(StrChoiceParam, ChoiceParam);
+        StrChoiceParam() { assert(false); }
 
+        protected :
+            /** @brief hidden constructor */
+            StrChoiceParam(const ParamSet* p_ParamSet, const std::string& p_Name, OfxParamHandle p_Handle);
+
+        // so it can make one
+        friend class ParamSet;
+
+        public :
+            /** @brief how many options do we have */
+            int getNOptions();
+
+        /** @brief append an option */
+        void appendOption(const std::string& p_Enum, const std::string& p_Option);
+
+        /** @brief set an option */
+        void setOption(const std::string& p_Index, const std::string& p_Option);
+
+        /** @brief get the option value */
+        void getOption(const std::string& p_Index, std::string& p_Option);
+
+        /** @brief clear all the options so as to add some new ones in */
+        void resetOptions();
+
+        // Methods from StringParam as a facade to ChoiceParam
+
+        /** @brief set the default value */
+        void setDefault(const std::string &v);
+
+        /** @brief get the default value */
+        void getDefault(std::string &v);
+
+        /** @brief get value */
+        void getValue(std::string &v);
+
+        /** @brief get the value at a time */
+        void getValueAtTime(double t, std::string &v);
+
+        /** @brief set value */
+        void setValue(const std::string &v);
+
+        /** @brief set the value at a time, implicitly adds a keyframe */
+        void setValueAtTime(double t, const std::string &v);
+
+        private:
+          std::vector<std::pair<std::string, std::string>> m_StringOptions;
+
+    };
+#endif
     ////////////////////////////////////////////////////////////////////////////////
     /** @brief Wraps up a boolean param */
     class BooleanParam : public ValueParam {

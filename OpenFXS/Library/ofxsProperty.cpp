@@ -56,7 +56,12 @@ namespace OFX {
     case kOfxStatErrUnknown :
     case kOfxStatErrUnsupported : // unsupported implies unknow here
       if(OFX::PropertySet::getThrowOnUnsupportedProperties()) // are we suppressing this?
-        throw OFX::Exception::PropertyUnknownToHost(propName.c_str());
+        {
+#ifdef DEHANCER_HOST_VEGAS
+            OFX::Log::print("Not supported property %s", propName.c_str());
+#endif
+            throw OFX::Exception::PropertyUnknownToHost(propName.c_str());
+        }
       break;
 
     case kOfxStatErrMemory :
