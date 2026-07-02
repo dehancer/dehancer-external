@@ -2776,6 +2776,8 @@ namespace OFX {
               
               // fetch our pointer out of the props on the handle
               ImageEffect *instance = retrieveImageEffectPointer(handle);
+
+              factory->destroyInstance(instance);
               
               // kill it
               delete instance;

@@ -179,6 +179,7 @@ namespace OFX {
         virtual void describe(OFX::ImageEffectDescriptor &desc) = 0;
         virtual void describeInContext(OFX::ImageEffectDescriptor &desc, ContextEnum context) = 0;
         virtual ImageEffect* createInstance(OfxImageEffectHandle handle, ContextEnum context) = 0;
+        virtual void destroyInstance(ImageEffect* instance) = 0;
         virtual const std::string& getID() const = 0;
         virtual const std::string& getUID() const = 0;
         virtual unsigned int getMajorVersion() const = 0;
