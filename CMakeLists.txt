@@ -1,77 +1,80 @@
-cmake_minimum_required(VERSION 3.12)
-set(CURRENT_TARGET_NAME dehancer_external)
+cmake_minimum_required(VERSION 4.3)
 
-#
-# Project
-#
-project(${CURRENT_TARGET_NAME} VERSION 1.6.0 LANGUAGES CXX C)
-option(PRINT_DEBUG OFF)
+project(dehancer_external VERSION 1.7.0 LANGUAGES CXX)
 
-#
-# CXX 1x
-#
-set (CMAKE_CXX_STANDARD 17)
-set (BUILD_SHARED_LIBS OFF)
+include(GNUInstallDirs)
+include(CMakePackageConfigHelpers)
 
-# disable developer warnings
-set(CMAKE_POLICY_DEFAULT_CMP0054 NEW)
+option(PRINT_DEBUG "Enable OpenFX debug logging" OFF)
 
-if(UNIX AND NOT APPLE)
-    set(LINUX TRUE)
-endif()
+# OpenFX support is linked into plugins, which supply getPluginIDs().
+add_library(dehancer_external STATIC
+    OpenFXS/Library/ofxsCore.cpp
+    OpenFXS/Library/ofxsHWNDInteract.cpp
+    OpenFXS/Library/ofxsImageEffect.cpp
+    OpenFXS/Library/ofxsInteract.cpp
+    OpenFXS/Library/ofxsLog.cpp
+    OpenFXS/Library/ofxsMultiThread.cpp
+    OpenFXS/Library/ofxsParams.cpp
+    OpenFXS/Library/ofxsProperty.cpp
+    OpenFXS/Library/ofxsPropertyValidation.cpp
+)
+add_library(dehancer_external::dehancer_external ALIAS dehancer_external)
 
-if(LINUX)
-    set(STATIC_LINKING OFF)
-    message(STATUS "Linux configuration...")
-    if (DEHANCER_GPU_METAL)
-        message(FATAL_ERROR "Linux GPU Layer does not suppor Metal SDK")
-    endif ()
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC -W -Wall -Wextra -Wno-ignored-qualifiers -Wvariadic-macros")
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fvisibility=default -Wno-unused-parameter")
-elseif(APPLE)
-    set(STATIC_LINKING ON)
-    message(STATUS "Apple configuration...")
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC -W -Wall -Wextra -Wno-ignored-qualifiers -Wvariadic-macros -Wno-unused-function")
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fvisibility=default -Wno-unused-parameter")
-endif()
+target_compile_features(dehancer_external PUBLIC cxx_std_17)
 
-if (WIN32)
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -EHsc -Wno-deprecated-declarations")
-    add_definitions(/MT /DWIN32=1 /D_ITERATOR_DEBUG_LEVEL=0)
-    string(TOLOWER  ${CMAKE_BUILD_TYPE} BUILD_TYPE)
-    if (${BUILD_TYPE} STREQUAL "debug")
-        add_definitions(/MTd)
-    endif()
-endif ()
-
-
-if(PRINT_DEBUG)
-    if (WIN32)
-        add_definitions(/DPRINT_DEBUG=1 /DDEBUG_BUILD=1)
-    else()
-        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DPRINT_DEBUG=1 -DDEBUG_BUILD=1")
-    endif ()
-endif()
-
-file (GLOB COMMON_SRC ${COMMON_SRC}
-        ./OpenFXS/Library/*.cpp
-        )
-
-include_directories(
-        ${CMAKE_CURRENT_SOURCE_DIR}/OpenFX/include
-        ${CMAKE_CURRENT_SOURCE_DIR}/OpenFXS/include
-        ./
+set_target_properties(dehancer_external PROPERTIES
+    CXX_EXTENSIONS OFF
+    POSITION_INDEPENDENT_CODE ON
+    CXX_VISIBILITY_PRESET default
 )
 
-add_library(${CURRENT_TARGET_NAME} ${COMMON_SRC})
+if(PRINT_DEBUG)
+    target_compile_definitions(dehancer_external PRIVATE PRINT_DEBUG=1 DEBUG_BUILD=1)
+endif()
 
-FILE(GLOB PUBLIC_INCLUDE_FILES
-        ${CMAKE_CURRENT_SOURCE_DIR}/OpenFX/include/*.h
-        ${CMAKE_CURRENT_SOURCE_DIR}/OpenFXS/include/*.h
-        )
+# Keep qualified and unqualified includes identical in build and install trees.
+file(GLOB dehancer_external_headers CONFIGURE_DEPENDS
+    "${CMAKE_CURRENT_SOURCE_DIR}/OpenFX/include/*.h"
+    "${CMAKE_CURRENT_SOURCE_DIR}/OpenFXS/include/*.h"
+)
+set(dehancer_external_public_headers)
+foreach(header IN LISTS dehancer_external_headers)
+    cmake_path(GET header FILENAME filename)
+    set(output "${CMAKE_CURRENT_BINARY_DIR}/include/openfx/${filename}")
+    configure_file("${header}" "${output}" COPYONLY)
+    list(APPEND dehancer_external_public_headers "${output}")
+endforeach()
 
-file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/OpenFX/include/ DESTINATION "${CMAKE_CURRENT_BINARY_DIR}/include/openfx/")
-file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/OpenFXS/include/ DESTINATION "${CMAKE_CURRENT_BINARY_DIR}/include/openfx/")
+target_sources(dehancer_external PUBLIC
+    FILE_SET HEADERS
+    BASE_DIRS "${CMAKE_CURRENT_BINARY_DIR}/include"
+    FILES ${dehancer_external_public_headers}
+)
 
-install(TARGETS ${CURRENT_TARGET_NAME} DESTINATION lib)
-install(FILES   ${PUBLIC_INCLUDE_FILES} DESTINATION include/openfx)
+target_include_directories(dehancer_external PUBLIC
+    "$<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/include/openfx>"
+    "$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/openfx>"
+)
+
+install(TARGETS dehancer_external
+    EXPORT dehancer_externalTargets
+    ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}"
+    FILE_SET HEADERS DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}"
+)
+
+set(dehancer_external_cmake_install_dir "${CMAKE_INSTALL_LIBDIR}/cmake/dehancer_external")
+configure_package_config_file(
+    cmake/Config.cmake.in
+    "${CMAKE_CURRENT_BINARY_DIR}/dehancer_externalConfig.cmake"
+    INSTALL_DESTINATION "${dehancer_external_cmake_install_dir}"
+)
+install(EXPORT dehancer_externalTargets
+    FILE dehancer_externalTargets.cmake
+    NAMESPACE dehancer_external::
+    DESTINATION "${dehancer_external_cmake_install_dir}"
+)
+install(FILES
+    "${CMAKE_CURRENT_BINARY_DIR}/dehancer_externalConfig.cmake"
+    DESTINATION "${dehancer_external_cmake_install_dir}"
+)
