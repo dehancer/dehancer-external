@@ -3,9 +3,9 @@ cmake_minimum_required(VERSION 4.3)
 project(dehancer_external VERSION 1.7.0 LANGUAGES CXX)
 
 include(GNUInstallDirs)
-include(CMakePackageConfigHelpers)
 
 option(PRINT_DEBUG "Enable OpenFX debug logging" OFF)
+option(DEHANCER_EXTERNAL_INSTALL "Install library and CMake package" ${PROJECT_IS_TOP_LEVEL})
 
 # OpenFX support is linked into plugins, which supply getPluginIDs().
 add_library(dehancer_external STATIC
@@ -57,10 +57,15 @@ target_include_directories(dehancer_external PUBLIC
     "$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/openfx>"
 )
 
+if(NOT DEHANCER_EXTERNAL_INSTALL)
+    return()
+endif()
+
+include(CMakePackageConfigHelpers)
+
 install(TARGETS dehancer_external
     EXPORT dehancer_externalTargets
-    ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}"
-    FILE_SET HEADERS DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}"
+    FILE_SET HEADERS
 )
 
 set(dehancer_external_cmake_install_dir "${CMAKE_INSTALL_LIBDIR}/cmake/dehancer_external")
@@ -68,9 +73,9 @@ configure_package_config_file(
     cmake/Config.cmake.in
     "${CMAKE_CURRENT_BINARY_DIR}/dehancer_externalConfig.cmake"
     INSTALL_DESTINATION "${dehancer_external_cmake_install_dir}"
+    NO_SET_AND_CHECK_MACRO
 )
 install(EXPORT dehancer_externalTargets
-    FILE dehancer_externalTargets.cmake
     NAMESPACE dehancer_external::
     DESTINATION "${dehancer_external_cmake_install_dir}"
 )

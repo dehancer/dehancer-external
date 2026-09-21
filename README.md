@@ -16,6 +16,10 @@ The library remains static even when a parent sets `BUILD_SHARED_LIBS=ON`.
 OpenFX plugins supply `OFX::Plugin::getPluginIDs()` when linking support code.
 No tests or benchmarks are defined. `PRINT_DEBUG=ON` enables support-library logging.
 
+`DEHANCER_EXTERNAL_INSTALL` defaults to `ON` for standalone builds and `OFF` when
+embedded. Set it explicitly to override installation of the library, headers,
+and CMake package.
+
 ## CMake consumption
 
 Installed package:
