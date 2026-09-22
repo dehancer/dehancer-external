@@ -2,13 +2,12 @@
 
 ## Build and install
 
-Requires CMake 4.3+ and a C++17 compiler. No external packages are required.
-
 ```sh
 cmake -S . -B build \
-  -G "Ninja Multi-Config"
+  -DCMAKE_INSTALL_PREFIX="$HOME/local-dehancer" \
+  -DCMAKE_BUILD_TYPE=Release
 cmake --build build --config Release --parallel $(nproc)
-cmake --install build --config Release --prefix $HOME/local-dehancer
+cmake --install build --config Release
 ```
 
 The library remains static even when a parent sets `BUILD_SHARED_LIBS=ON`.
