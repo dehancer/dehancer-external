@@ -33,6 +33,11 @@ if(PRINT_DEBUG)
     target_compile_definitions(dehancer_external PRIVATE PRINT_DEBUG=1 DEBUG_BUILD=1)
 endif()
 
+# This is required to be set by OFX Support Library
+if(LINUX)
+    target_compile_definitions(dehancer_external PRIVATE linux=1)
+endif()
+
 # Keep qualified and unqualified includes identical in build and install trees.
 file(GLOB dehancer_external_headers CONFIGURE_DEPENDS
     "${CMAKE_CURRENT_SOURCE_DIR}/OpenFX/include/*.h"
