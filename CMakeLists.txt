@@ -5,7 +5,6 @@ project(dehancer_external VERSION 1.7.0 LANGUAGES CXX)
 include(GNUInstallDirs)
 
 option(PRINT_DEBUG "Enable OpenFX debug logging" OFF)
-option(DEHANCER_EXTERNAL_INSTALL "Install library and CMake package" ${PROJECT_IS_TOP_LEVEL})
 
 # OpenFX support is linked into plugins, which supply getPluginIDs().
 add_library(dehancer_external STATIC
@@ -61,10 +60,6 @@ target_include_directories(dehancer_external PUBLIC
     "$<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/include/openfx>"
     "$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/openfx>"
 )
-
-if(NOT DEHANCER_EXTERNAL_INSTALL)
-    return()
-endif()
 
 include(CMakePackageConfigHelpers)
 
